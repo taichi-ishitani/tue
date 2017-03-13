@@ -13,25 +13,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_PKG_SV
-`define TUE_PKG_SV
+`ifndef TUE_OBJECT_DEFINES_SVH
+`define TUE_OBJECT_DEFINES_SVH
 
-`include  "tue_macros.svh"
+`define tue_object_default_constructor(TYPE) \
+function new(string name = `"TYPE`"); \
+  super.new(name); \
+endfunction
 
-package tue_pkg;
-  import  uvm_pkg::*;
+`define tue_component_default_constructor(TYPE) \
+function new(string name = `"TYPE`", uvm_component parent = null); \
+  super.new(name, parent); \
+endfunction
 
-  `tue_include_file(base, tue_configuration.svh )
-  `tue_include_file(base, tue_status.svh        )
-  `tue_include_file(base, tue_component_base.svh)
-  `tue_include_file(base, tue_component.svh     )
-
-  `tue_include_file(comps, tue_subscriber.svh)
-  `tue_include_file(comps, tue_monitor.svh   )
-  `tue_include_file(comps, tue_driver.svh    )
-  `tue_include_file(comps, tue_scoreboard.svh)
-  `tue_include_file(comps, tue_agent.svh     )
-  `tue_include_file(comps, tue_env.svh       )
-  `tue_include_file(comps, tue_test.svh      )
-endpackage
 `endif

@@ -13,25 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_PKG_SV
-`define TUE_PKG_SV
-
-`include  "tue_macros.svh"
-
-package tue_pkg;
-  import  uvm_pkg::*;
-
-  `tue_include_file(base, tue_configuration.svh )
-  `tue_include_file(base, tue_status.svh        )
-  `tue_include_file(base, tue_component_base.svh)
-  `tue_include_file(base, tue_component.svh     )
-
-  `tue_include_file(comps, tue_subscriber.svh)
-  `tue_include_file(comps, tue_monitor.svh   )
-  `tue_include_file(comps, tue_driver.svh    )
-  `tue_include_file(comps, tue_scoreboard.svh)
-  `tue_include_file(comps, tue_agent.svh     )
-  `tue_include_file(comps, tue_env.svh       )
-  `tue_include_file(comps, tue_test.svh      )
-endpackage
+`ifndef TUE_DRIVER_SVH
+`define TUE_DRIVER_SVH
+class tue_driver #(
+  type  CONFIGURATION = tue_configuration_dummy,
+  type  STATUS        = tue_status_dummy,
+  type  REQ           = uvm_sequence_item,
+  type  RSP           = REQ
+) extends tue_component_base #(uvm_driver #(REQ, RSP), CONFIGURATION, STATUS);
+  `tue_component_default_constructor(tue_driver)
+endclass
 `endif

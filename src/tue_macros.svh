@@ -16,6 +16,14 @@
 `ifndef TUE_MACROS_SVH
 `define TUE_MACROS_SVH
 
-`include "uvm_macros.svh"
+`include  "uvm_macros.svh"
+
+`ifndef TUE_FLAT_INCLUDES
+  `define tue_include_file(directory, file_name) `include `"directory/file_name`"
+`else
+  `define tue_include_file(directory, file_name) `include `"file_name`"
+`endif
+
+`tue_include_file(macros, tue_object_defines.svh)
 
 `endif

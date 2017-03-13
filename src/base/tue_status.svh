@@ -13,25 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_PKG_SV
-`define TUE_PKG_SV
+`ifndef TUE_STATUS_SVH
+`define TUE_STATUS_SVH
+virtual class tue_status extends uvm_object;
+  `tue_object_default_constructor(tue_status)
+endclass
 
-`include  "tue_macros.svh"
-
-package tue_pkg;
-  import  uvm_pkg::*;
-
-  `tue_include_file(base, tue_configuration.svh )
-  `tue_include_file(base, tue_status.svh        )
-  `tue_include_file(base, tue_component_base.svh)
-  `tue_include_file(base, tue_component.svh     )
-
-  `tue_include_file(comps, tue_subscriber.svh)
-  `tue_include_file(comps, tue_monitor.svh   )
-  `tue_include_file(comps, tue_driver.svh    )
-  `tue_include_file(comps, tue_scoreboard.svh)
-  `tue_include_file(comps, tue_agent.svh     )
-  `tue_include_file(comps, tue_env.svh       )
-  `tue_include_file(comps, tue_test.svh      )
-endpackage
+class tue_status_dummy extends tue_status;
+  `tue_object_default_constructor(tue_status_dummy)
+  `uvm_object_utils(tue_status_dummy)
+endclass
 `endif
