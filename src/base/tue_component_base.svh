@@ -23,8 +23,16 @@ virtual class tue_component_base #(
   protected CONFIGURATION configuration;
   protected STATUS        status;
 
+  function void apply_config_settings(bit verbose = 0);
+    super.apply_config_settings(verbose);
+    m_get_configuration();
+    m_get_status();
+  endfunction
+
   virtual function void set_configuration(tue_configuration configuration);
-    $cast(this.configuration, configuration);
+    if (!$cast(this.configuration, configuration)) begin
+      `uvm_fatal(get_name(), "Error casting configuration object")
+    end
   endfunction
 
   virtual function CONFIGURATION get_configuration();
@@ -32,11 +40,41 @@ virtual class tue_component_base #(
   endfunction
 
   virtual function void set_status(tue_status status);
-    $cast(this.status, status);
+    if (!$cast(this.status, status)) begin
+      `uvm_fatal(get_name(), "Error casting status object")
+    end
   endfunction
 
   virtual function STATUS get_status();
     return status;
+  endfunction
+
+  virtual protected function void m_get_configuration();
+    if (configuration != null) begin
+      return;
+    end
+    if (CONFIGURATION::type_name == tue_configuration_dummy::type_name) begin
+      return;
+    end
+
+    void'(uvm_config_db#(CONFIGURATION)::get(this, "", "configuration", configuration));
+    if (configuration == null) begin
+      `uvm_fatal(get_name(), "Configuration object is not set")
+    end
+  endfunction
+
+  virtual protected function void m_get_status();
+    if (status != null) begin
+      return;
+    end
+    if (STATUS::type_name == tue_status_dummy::type_name) begin
+      return;
+    end
+
+    void'(uvm_config_db#(STATUS)::get(this, "", "status", status));
+    if (status == null) begin
+      `uvm_fatal(get_name(), "Status object is not set")
+    end
   endfunction
 
   `tue_component_default_constructor(tue_component_base)
