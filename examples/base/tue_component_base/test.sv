@@ -61,31 +61,41 @@ package sample_pkg;
       uvm_config_db#(sample_status)::set(b1, "", "status", status);
 
       b2  = sample_component_b::type_id::create("b2", this);
-      b2.set_report_severity_override(UVM_FATAL, UVM_WARNING);
 
       b3  = sample_component_b::type_id::create("b3", this);
-      b3.set_report_severity_override(UVM_FATAL, UVM_WARNING);
       uvm_config_db#(sample_status)::set(b3, "", "status", null);
     endfunction
 
     function void start_of_simulation_phase(uvm_phase phase);
-      if (a0.get_configuration() != configuration) begin
+      if ((a0.get_configuration() != configuration) || (a0.get_status() != null)) begin
         `uvm_fatal(get_name(), "Error!")
       end
-      if (a1.get_configuration() != configuration) begin
+      if ((a1.get_configuration() != configuration) || (a1.get_status() != null)) begin
         `uvm_fatal(get_name(), "Error!")
       end
-      if (b0.get_status() != status) begin
+      if ((a2.get_configuration() != null) || (a2.get_status() != null)) begin
         `uvm_fatal(get_name(), "Error!")
       end
-      if (b1.get_status() != status) begin
+      if ((a3.get_configuration() != null) || (a3.get_status() != null)) begin
+        `uvm_fatal(get_name(), "Error!")
+      end
+      if ((b0.get_status() != status) || (b0.get_configuration() != null)) begin
+        `uvm_fatal(get_name(), "Error!")
+      end
+      if ((b1.get_status() != status) || (b1.get_configuration() != null)) begin
+        `uvm_fatal(get_name(), "Error!")
+      end
+      if ((b2.get_status() == null) || (b2.get_status() == status) || (b2.get_configuration() != null)) begin
+        `uvm_fatal(get_name(), "Error!")
+      end
+      if ((b3.get_status() == null) || (b3.get_status() == status) || (b3.get_configuration() != null)) begin
         `uvm_fatal(get_name(), "Error!")
       end
     endfunction
 
     function void report_phase(uvm_phase phase);
       uvm_report_server report_server = uvm_report_server::get_server();
-      if (report_server.get_severity_count(UVM_WARNING) == 4) begin
+      if (report_server.get_severity_count(UVM_WARNING) == 2) begin
         `uvm_info(get_name(), "OK!", UVM_MEDIUM)
       end
       else begin

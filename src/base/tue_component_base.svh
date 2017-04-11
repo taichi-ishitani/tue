@@ -73,8 +73,12 @@ virtual class tue_component_base #(
 
     void'(uvm_config_db#(STATUS)::get(this, "", "status", status));
     if (status == null) begin
-      `uvm_fatal(get_name(), "Status object is not set")
+      status  = create_status();
     end
+  endfunction
+
+  virtual protected function STATUS create_status();
+    return STATUS::type_id::create("status");
   endfunction
 
   `tue_component_default_constructor(tue_component_base)
