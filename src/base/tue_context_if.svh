@@ -13,26 +13,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_PKG_SV
-`define TUE_PKG_SV
-
-`include  "tue_macros.svh"
-
-package tue_pkg;
-  import  uvm_pkg::*;
-
-  `tue_include_file(base, tue_configuration.svh )
-  `tue_include_file(base, tue_status.svh        )
-  `tue_include_file(base, tue_context_if.svh    )
-  `tue_include_file(base, tue_component_base.svh)
-  `tue_include_file(base, tue_component.svh     )
-
-  `tue_include_file(comps, tue_subscriber.svh)
-  `tue_include_file(comps, tue_monitor.svh   )
-  `tue_include_file(comps, tue_driver.svh    )
-  `tue_include_file(comps, tue_scoreboard.svh)
-  `tue_include_file(comps, tue_agent.svh     )
-  `tue_include_file(comps, tue_env.svh       )
-  `tue_include_file(comps, tue_test.svh      )
-endpackage
+`ifndef TUE_CONTEXT_IF_SVH
+`define TUE_CONTEXT_IF_SVH
+interface class tue_context_if #(
+  type  CONFIGURATION = tue_configuration_dummy,
+  type  STATUS        = tue_status_dummy
+);
+  pure virtual function void set_configuration(tue_configuration configuration);
+  pure virtual function CONFIGURATION get_configuration();
+  pure virtual function void set_status(tue_status status);
+  pure virtual function STATUS get_status();
+endclass
 `endif
