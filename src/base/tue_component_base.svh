@@ -19,7 +19,7 @@ virtual class tue_component_base #(
   type  BASE          = uvm_component,
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy
-) extends BASE implements tue_context_if #(CONFIGURATION, STATUS);
+) extends BASE;
   protected CONFIGURATION configuration;
   protected STATUS        status;
 

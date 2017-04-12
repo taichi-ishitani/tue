@@ -23,7 +23,16 @@ class tue_sequencer #(
 ) extends tue_component_base #(
   uvm_sequencer #(REQ, RSP), CONFIGURATION, STATUS
 );
-  `tue_component_default_constructor(tue_sequencer)
+  typedef tue_sequencer #(CONFIGURATION, STATUS, REQ, RSP)        this_type;
+  typedef tue_component_proxy #(CONFIGURATION, STATUS, this_type) t_component_proxy;
+
+  local t_component_proxy component_proxy;
+
+  function new(string name = "tue_sequencer", uvm_component parent = null);
+    super.new(name, parent);
+    component_proxy = new("component_proxy", this);
+  endfunction
+
   `uvm_component_param_utils(tue_sequencer #(CONFIGURATION, STATUS, REQ, RSP))
 endclass
 `endif

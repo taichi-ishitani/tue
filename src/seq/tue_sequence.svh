@@ -25,11 +25,14 @@ class tue_sequence #(
   protected STATUS        status;
 
   function void set_sequencer(uvm_sequencer_base sequencer);
-    tue_context_if #(CONFIGURATION, STATUS) context_if;
+    tue_component_proxy_base #(CONFIGURATION, STATUS) component_proxy;
     super.set_sequencer(sequencer);
-    if ($cast(context_if, sequencer)) begin
-      configuration = context_if.get_configuration();
-      status        = context_if.get_status();
+    if (
+        sequencer.has_child("component_proxy") &&
+        $cast(component_proxy, sequencer.get_child("component_proxy"))
+      ) begin
+      configuration = component_proxy.get_configuration();
+      status        = component_proxy.get_status();
     end
   endfunction
 
