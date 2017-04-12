@@ -27,16 +27,19 @@ package tue_pkg;
   `tue_include_file(base, tue_component_base.svh)
   `tue_include_file(base, tue_component.svh     )
 
-  `tue_include_file(comps, tue_subscriber.svh)
-  `tue_include_file(comps, tue_monitor.svh   )
-  `tue_include_file(comps, tue_driver.svh    )
-  `tue_include_file(comps, tue_scoreboard.svh)
-  `tue_include_file(comps, tue_agent.svh     )
-  `tue_include_file(comps, tue_env.svh       )
-  `tue_include_file(comps, tue_test.svh      )
+  `tue_include_file(comps, tue_subscriber.svh )
+  `tue_include_file(comps, tue_monitor.svh    )
+  `tue_include_file(comps, tue_driver.svh     )
+  `tue_include_file(comps, tue_scoreboard.svh )
+  `tue_include_file(comps, tue_agent.svh      )
+  `tue_include_file(comps, tue_env.svh        )
+  `tue_include_file(comps, tue_test.svh       )
 
   `tue_include_file(seq, tue_sequence_item.svh)
   `tue_include_file(seq, tue_sequence.svh     )
   `tue_include_file(seq, tue_sequencer.svh    )
+
+  `tue_include_file(comps, tue_param_monitor.svh)
+  `tue_include_file(comps, tue_param_agent.svh  )
 endpackage
 `endif

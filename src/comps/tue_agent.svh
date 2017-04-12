@@ -28,11 +28,11 @@ virtual class tue_agent #(
   endfunction
 
   virtual function bit is_active_agent();
-    return (get_is_active() == UVM_ACTIVE) ? 1 : 0;
+    return (is_active == UVM_ACTIVE) ? 1 : 0;
   endfunction
 
   virtual function bit is_passive_agent();
-    return (get_is_active() == UVM_PASSIVE) ? 1 : 0;
+    return (is_active == UVM_PASSIVE) ? 1 : 0;
   endfunction
 
   `tue_component_default_constructor(tue_agent)

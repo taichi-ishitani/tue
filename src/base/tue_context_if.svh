@@ -23,5 +23,6 @@ interface class tue_context_if #(
   pure virtual function CONFIGURATION get_configuration();
   pure virtual function void set_status(tue_status status);
   pure virtual function STATUS get_status();
+  pure virtual function void set_context(tue_configuration configuration, tue_status status);
 endclass
 `endif

@@ -49,6 +49,11 @@ virtual class tue_component_base #(
     return status;
   endfunction
 
+  virtual function void set_context(tue_configuration configuration, tue_status status);
+    set_configuration(configuration);
+    set_status(status);
+  endfunction
+
   virtual protected function void m_get_configuration();
     if (configuration != null) begin
       return;
