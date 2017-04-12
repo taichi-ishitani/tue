@@ -1,2 +1,2 @@
 +incdir+${TUE_HOME}/src
-src/tue_pkg.sv
+${TUE_HOME}/src/tue_pkg.sv
