@@ -64,15 +64,15 @@ virtual class tue_component_base #(
 
     void'(uvm_config_db#(CONFIGURATION)::get(this, "", "configuration", configuration));
     if (configuration == null) begin
-      configuration = create_configuration();
+      create_configuration();
     end
     if (configuration == null) begin
       `uvm_fatal(get_name(), "Configuration object is not set")
     end
   endfunction
 
-  virtual protected function CONFIGURATION create_configuration();
-    return null;
+  virtual protected function void create_configuration();
+    return;
   endfunction
 
   virtual protected function void m_get_status();
@@ -85,12 +85,15 @@ virtual class tue_component_base #(
 
     void'(uvm_config_db#(STATUS)::get(this, "", "status", status));
     if (status == null) begin
-      status  = create_status();
+      create_status();
+    end
+    if (status == null) begin
+      `uvm_fatal(get_name(), "Status object is not set")
     end
   endfunction
 
-  virtual protected function STATUS create_status();
-    return STATUS::type_id::create("status");
+  virtual protected function void create_status();
+    status  = STATUS::type_id::create("status");
   endfunction
 
   `tue_component_default_constructor(tue_component_base)
