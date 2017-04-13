@@ -25,10 +25,8 @@ class tue_sequence_item #(
   function void set_sequencer(uvm_sequencer_base sequencer);
     tue_component_proxy_base #(CONFIGURATION, STATUS) component_proxy;
     super.set_sequencer(sequencer);
-    if (
-      sequencer.has_child("component_proxy") &&
-      $cast(component_proxy, sequencer.get_child("component_proxy"))
-    ) begin
+    component_proxy = tue_component_proxy_base #(CONFIGURATION, STATUS)::get(sequencer);
+    if (component_proxy != null) begin
       configuration = component_proxy.get_configuration();
       status        = component_proxy.get_status();
     end
