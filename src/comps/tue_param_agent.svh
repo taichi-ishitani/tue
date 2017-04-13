@@ -67,27 +67,27 @@ virtual class tue_param_agent #(
   endfunction
 
   local function void create_analysis_port();
-    if (tue_check_type(ITEM::get_type(), tue_sequence_item_dummy::get_type())) begin
+    if (!tue_check_type(ITEM::get_type(), tue_sequence_item_dummy::get_type())) begin
       analysis_port = new("analysis_port", this);
     end
   endfunction
 
   local function void create_monitor();
-    if (tue_check_type(MONITOR::get_type(), tue_monitor_dummy::get_type())) begin
+    if (!tue_check_type(MONITOR::get_type(), tue_monitor_dummy::get_type())) begin
       monitor = MONITOR::type_id::create("monitor", this);
       monitor.set_context(get_configuration(), get_status());
     end
   endfunction
 
   local function void create_seqnecer();
-    if (is_active_agent() && tue_check_type(SEQUENCER::get_type(), tue_sequencer_dummy::get_type())) begin
+    if (is_active_agent() && (!tue_check_type(SEQUENCER::get_type(), tue_sequencer_dummy::get_type()))) begin
       sequencer = SEQUENCER::type_id::create("sequencer", this);
       sequencer.set_context(get_configuration(), get_status());
     end
   endfunction
 
   local function void create_driver();
-    if (is_active_agent() && tue_check_type(DRIVER::get_type(), tue_driver_dummy::get_type())) begin
+    if (is_active_agent() && (!tue_check_type(DRIVER::get_type(), tue_driver_dummy::get_type()))) begin
       driver  = DRIVER::type_id::create("driver", this);
       driver.set_context(get_configuration(), get_status());
     end
