@@ -13,18 +13,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_MACROS_SVH
-`define TUE_MACROS_SVH
+`ifndef TUE_VERSION_DEFINES_SVH
+`define TUE_VERSION_DEFINES_SVH
 
-`include  "uvm_macros.svh"
+`define TUE_MAJOR_REV 0
 
-`ifndef TUE_FLAT_INCLUDES
-  `define tue_include_file(directory, file_name) `include `"directory/file_name`"
-`else
-  `define tue_include_file(directory, file_name) `include `"file_name`"
-`endif
+`define TUE_MINOR_REV 1
 
-`tue_include_file(macros, tue_version_defines.svh)
-`tue_include_file(macros, tue_object_defines.svh )
+`define TUE_NAME  TUE
+
+`define TUE_VERSION_STRING `"`TUE_NAME``-```TUE_MAJOR_REV``.```TUE_MINOR_REV```"
 
 `endif
