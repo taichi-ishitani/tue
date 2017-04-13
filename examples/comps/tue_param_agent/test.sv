@@ -46,17 +46,13 @@ package sample_pkg;
     `uvm_component_utils(sample_passive_agent)
   endclass
 
-  class sample_test extends uvm_test;
-    sample_configuration  configuration;
-    sample_status         status;
+  class sample_test extends tue_test #(sample_configuration, sample_status);
     sample_active_agent   active_agent_0;
     sample_active_agent   active_agent_1;
     sample_passive_agent  passive_agent;
 
     function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      configuration = new();
-      status        = new();
 
       active_agent_0  = sample_active_agent::type_id::create("active_agent_0", this);
       active_agent_0.set_context(configuration, status);

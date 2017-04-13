@@ -25,9 +25,7 @@ package sample_pkg;
     `uvm_component_utils(sample_component_b)
   endclass
 
-  class sample_test extends uvm_test;
-    sample_configuration  configuration;
-    sample_status         status;
+  class sample_test extends tue_test #(sample_configuration, sample_status);
     sample_component_a    a0;
     sample_component_a    a1;
     sample_component_a    a2;
@@ -38,8 +36,7 @@ package sample_pkg;
     sample_component_b    b3;
 
     function void build_phase(uvm_phase phase);
-      configuration = new();
-      status        = new();
+      super.build_phase(phase);
 
       a0  = sample_component_a::type_id::create("a0", this);
       a0.set_configuration(configuration);

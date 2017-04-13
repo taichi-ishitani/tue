@@ -27,15 +27,11 @@ package sample_pkg;
 
   typedef tue_sequencer #(sample_configuration, sample_status, sample_item) sample_sequencer;
 
-  class sample_test extends uvm_test;
-    sample_configuration  configuration;
-    sample_status         status;
+  class sample_test extends tue_test #(sample_configuration, sample_status);
     sample_sequencer      sequencer;
 
     function void build_phase(uvm_phase phase);
-      configuration = new();
-      status        = new();
-
+      super.build_phase(phase);
       sequencer     = sample_sequencer::type_id::create("sequencer", this);
       sequencer.set_configuration(configuration);
       sequencer.set_status(status);

@@ -19,6 +19,10 @@ virtual class tue_test #(
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy
 ) extends tue_component_base #(uvm_test, CONFIGURATION, STATUS);
+  function CONFIGURATION create_configuration();
+    return CONFIGURATION::type_id::create("configuration");
+  endfunction
+
   `tue_component_default_constructor(tue_test)
 endclass
 `endif
