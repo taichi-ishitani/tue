@@ -24,7 +24,7 @@ class tue_sequencer #(
   uvm_sequencer #(REQ, RSP), CONFIGURATION, STATUS
 );
   typedef tue_sequencer #(CONFIGURATION, STATUS, REQ, RSP)        this_type;
-  typedef tue_component_proxy #(CONFIGURATION, STATUS, this_type) t_component_proxy;
+  typedef tue_component_proxy #(this_type, CONFIGURATION, STATUS) t_component_proxy;
 
   local t_component_proxy component_proxy;
 

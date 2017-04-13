@@ -28,9 +28,9 @@ virtual class tue_component_proxy_base #(
 endclass
 
 class tue_component_proxy #(
+  type  COMPONENT     = uvm_component,
   type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  COMPONENT     = tue_component_base #(uvm_component, CONFIGURATION, STATUS)
+  type  STATUS        = tue_status_dummy
 ) extends tue_component_proxy_base #(CONFIGURATION, STATUS);
   local COMPONENT component;
 
