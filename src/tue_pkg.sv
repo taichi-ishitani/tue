@@ -23,6 +23,7 @@ package tue_pkg;
 
   `tue_include_file(base, tue_configuration.svh  )
   `tue_include_file(base, tue_status.svh         )
+  `tue_include_file(base, tue_check_type.svh     )
   `tue_include_file(base, tue_component_base.svh )
   `tue_include_file(base, tue_component_proxy.svh)
   `tue_include_file(base, tue_component.svh      )

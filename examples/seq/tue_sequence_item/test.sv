@@ -3,16 +3,16 @@ package sample_pkg;
   import  tue_pkg::*;
   `include  "tue_macros.svh"
 
-  class sample_configuration extends tue_configuration;
-    bit v;
+  class sample_configuration #(type T = bit) extends tue_configuration;
+    T v;
     `tue_object_default_constructor(sample_configuration)
-    `uvm_object_utils(sample_configuration)
+    `uvm_object_param_utils(sample_configuration)
   endclass
 
-  class sample_status extends tue_status;
-    bit v;
+  class sample_status #(type T = bit) extends tue_status;
+    T v;
     `tue_object_default_constructor(sample_status)
-    `uvm_object_utils(sample_status)
+    `uvm_object_param_utils(sample_status)
   endclass
 
   class sample_item extends tue_sequence_item #(sample_configuration, sample_status);

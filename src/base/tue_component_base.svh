@@ -58,7 +58,7 @@ virtual class tue_component_base #(
     if (configuration != null) begin
       return;
     end
-    if (CONFIGURATION::type_name == tue_configuration_dummy::type_name) begin
+    if (tue_check_type(CONFIGURATION::get_type(), tue_configuration_dummy::get_type())) begin
       return;
     end
 
@@ -79,7 +79,7 @@ virtual class tue_component_base #(
     if (status != null) begin
       return;
     end
-    if (STATUS::type_name == tue_status_dummy::type_name) begin
+    if (tue_check_type(STATUS::get_type(), tue_status_dummy::get_type())) begin
       return;
     end
 
