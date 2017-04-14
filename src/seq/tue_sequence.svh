@@ -20,7 +20,7 @@ class tue_sequence #(
   type  STATUS        = tue_status_dummy,
   type  REQ           = uvm_sequence_item,
   type  RSP           = REQ
-) extends uvm_sequence_item;
+) extends uvm_sequence #(REQ, RSP);
   protected CONFIGURATION configuration;
   protected STATUS        status;
 
@@ -33,6 +33,26 @@ class tue_sequence #(
       status        = component_proxy.get_status();
     end
   endfunction
+
+`ifndef UVM_POST_VERSION_1_1
+    protected bit enable_automatic_phase_objectoin  = 0;
+
+    protected function void set_automatic_phase_objectoin(bit value);
+      enable_automatic_phase_objectoin  = value;
+    endfunction
+
+    task pre_body();
+      if ((starting_phase != null) && enable_automatic_phase_objectoin) begin
+        starting_phase.raise_objection(this);
+      end
+    endtask
+
+    task post_body();
+      if ((starting_phase != null) && enable_automatic_phase_objectoin) begin
+        starting_phase.drop_objection(this);
+      end
+    endtask
+`endif
 
   `tue_object_default_constructor(tue_sequence)
 endclass
