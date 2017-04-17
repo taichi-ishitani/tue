@@ -43,7 +43,7 @@ virtual class tue_param_agent #(
   type  SEQUENCER     = tue_sequencer_dummy,
   type  DRIVER        = tue_driver_dummy
 ) extends tue_agent #(CONFIGURATION, STATUS);
-  uvm_analysis_port #(ITEM) analysis_port;
+  uvm_analysis_port #(ITEM) item_port;
   SEQUENCER                 sequencer;
 
   protected MONITOR monitor;
@@ -51,24 +51,24 @@ virtual class tue_param_agent #(
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    create_analysis_port();
+    create_item_port();
     create_monitor();
     create_seqnecer();
     create_driver();
   endfunction
 
   function void connect_phase(uvm_phase phase);
-    if ((analysis_port != null) && (monitor != null)) begin
-      monitor.analysis_port.connect(analysis_port);
+    if ((item_port != null) && (monitor != null)) begin
+      monitor.item_port.connect(item_port);
     end
     if ((sequencer != null) && (driver != null)) begin
       driver.seq_item_port.connect(sequencer.seq_item_export);
     end
   endfunction
 
-  local function void create_analysis_port();
+  local function void create_item_port();
     if (!tue_check_type(ITEM::get_type(), tue_sequence_item_dummy::get_type())) begin
-      analysis_port = new("analysis_port", this);
+      item_port = new("item_port", this);
     end
   endfunction
 

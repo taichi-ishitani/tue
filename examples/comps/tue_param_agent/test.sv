@@ -66,12 +66,12 @@ package sample_pkg;
     endfunction
 
     function void report_phase(uvm_phase phase);
-      uvm_analysis_port #(sample_item)  analysis_port;
+      uvm_analysis_port #(sample_item)  item_port;
       sample_monitor                    monitor;
       sample_sequencer                  sequencer;
       sample_driver                     driver;
       if (!(
-        $cast(analysis_port, active_agent_0.analysis_port) &&
+        $cast(item_port, active_agent_0.item_port) &&
         $cast(monitor, active_agent_0.get_child("monitor")) &&
         $cast(sequencer, active_agent_0.sequencer) &&
         $cast(driver, active_agent_0.get_child("driver"))
@@ -79,7 +79,7 @@ package sample_pkg;
         `uvm_error(get_name(), "Error!")
       end
       if (!(
-        $cast(analysis_port, active_agent_1.analysis_port) &&
+        $cast(item_port, active_agent_1.item_port) &&
         $cast(monitor, active_agent_1.get_child("monitor")) &&
         (!active_agent_1.has_child("sequencer")) &&
         (!active_agent_1.has_child("driver"   ))
@@ -87,7 +87,7 @@ package sample_pkg;
         `uvm_error(get_name(), "Error!")
       end
       if (!(
-        $cast(analysis_port, passive_agent.analysis_port) &&
+        $cast(item_port, passive_agent.item_port) &&
         $cast(monitor, passive_agent.get_child("monitor")) &&
         (!passive_agent.has_child("sequencer")) &&
         (!passive_agent.has_child("driver"   ))

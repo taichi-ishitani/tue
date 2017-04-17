@@ -20,11 +20,11 @@ virtual class tue_param_monitor #(
   type  STATUS        = tue_status_dummy,
   type  ITEM          = uvm_sequence_item
 ) extends tue_monitor #(CONFIGURATION, STATUS);
-  uvm_analysis_port #(ITEM) analysis_port;
+  uvm_analysis_port #(ITEM) item_port;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    analysis_port = new("analysis_port", this);
+    item_port = new("item_port", this);
   endfunction
 
   virtual function ITEM create_item(
@@ -49,7 +49,7 @@ virtual class tue_param_monitor #(
     if (!item.end_event.is_on()) begin
       end_tr(item, end_time, free_handle);
     end
-    analysis_port.write(item);
+    item_port.write(item);
   endfunction
 
   `tue_component_default_constructor(tue_param_monitor)
