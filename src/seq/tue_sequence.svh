@@ -35,20 +35,20 @@ class tue_sequence #(
   endfunction
 
 `ifndef UVM_POST_VERSION_1_1
-    protected bit enable_automatic_phase_objectoin  = 0;
+    protected bit enable_automatic_phase_objection  = 0;
 
-    protected function void set_automatic_phase_objectoin(bit value);
-      enable_automatic_phase_objectoin  = value;
+    protected function void set_automatic_phase_objection(bit value);
+      enable_automatic_phase_objection  = value;
     endfunction
 
     task pre_body();
-      if ((starting_phase != null) && enable_automatic_phase_objectoin) begin
+      if ((starting_phase != null) && enable_automatic_phase_objection) begin
         starting_phase.raise_objection(this);
       end
     endtask
 
     task post_body();
-      if ((starting_phase != null) && enable_automatic_phase_objectoin) begin
+      if ((starting_phase != null) && enable_automatic_phase_objection) begin
         starting_phase.drop_objection(this);
       end
     endtask
