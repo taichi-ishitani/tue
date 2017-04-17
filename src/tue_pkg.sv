@@ -43,5 +43,10 @@ package tue_pkg;
 
   `tue_include_file(comps, tue_param_monitor.svh)
   `tue_include_file(comps, tue_param_agent.svh  )
+
+  `tue_include_file(seq  , tue_reactive_sequencer.svh)
+  `tue_include_file(seq  , tue_reactive_sequence.svh )
+  `tue_include_file(comps, tue_reactive_monitor.svh  )
+  `tue_include_file(comps, tue_reactive_agent.svh    )
 endpackage
 `endif
