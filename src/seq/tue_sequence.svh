@@ -20,17 +20,13 @@ class tue_sequence #(
   type  STATUS        = tue_status_dummy,
   type  REQ           = uvm_sequence_item,
   type  RSP           = REQ
-) extends uvm_sequence #(REQ, RSP);
-  protected CONFIGURATION configuration;
-  protected STATUS        status;
-
+) extends tue_object_base #(uvm_sequence #(REQ, RSP), CONFIGURATION, STATUS);
   function void set_sequencer(uvm_sequencer_base sequencer);
     tue_component_proxy_base #(CONFIGURATION, STATUS) component_proxy;
     super.set_sequencer(sequencer);
     component_proxy = tue_component_proxy_base #(CONFIGURATION, STATUS)::get(sequencer);
     if (component_proxy != null) begin
-      configuration = component_proxy.get_configuration();
-      status        = component_proxy.get_status();
+      set_context(component_proxy.get_configuration(), component_proxy.get_status());
     end
   endfunction
 

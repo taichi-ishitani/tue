@@ -37,6 +37,7 @@ virtual class tue_param_monitor #(
   );
     ITEM  item;
     item  = ITEM::type_id::create(item_name);
+    item.set_context(configuration, status);
     void'(begin_tr(item, stream_name, label, desc, begin_time, parent_handle));
     return item;
   endfunction
