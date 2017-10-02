@@ -13,12 +13,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_SEQUENCE_ITEM_SVH
-`define TUE_SEQUENCE_ITEM_SVH
-class tue_sequence_item #(
+`ifndef TUE_SEQUENCE_ITEM_BASE_SVH
+`define TUE_SEQUENCE_ITEM_BASE_SVH
+class tue_sequence_item_base #(
+  type  BASE          = uvm_sequence_item,
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy
-) extends tue_sequence_item_base #(uvm_sequence_item, CONFIGURATION, STATUS);
-  `tue_object_default_constructor(tue_sequence_item)
+) extends tue_object_base #(
+  BASE, CONFIGURATION, STATUS
+);
+  typedef tue_component_proxy_base #(CONFIGURATION, STATUS)  t_component_proxy;
+
+  function void set_sequencer(uvm_sequencer_base sequencer);
+    t_component_proxy component_proxy;
+    super.set_sequencer(sequencer);
+    component_proxy = t_component_proxy::get(sequencer);
+    if (component_proxy != null) begin
+      set_context(component_proxy.get_configuration(), component_proxy.get_status());
+    end
+  endfunction
+
+  `tue_object_default_constructor(tue_sequence_item_base)
 endclass
 `endif

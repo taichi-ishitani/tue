@@ -13,12 +13,35 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //------------------------------------------------------------------------------
-`ifndef TUE_SEQUENCE_ITEM_SVH
-`define TUE_SEQUENCE_ITEM_SVH
-class tue_sequence_item #(
+`ifndef TUE_SEQUENCE_BASE_SVH
+`define TUE_SEQUENCE_BASE_SVH
+class tue_sequence_base #(
+  type  BASE          = uvm_sequence,
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy
-) extends tue_sequence_item_base #(uvm_sequence_item, CONFIGURATION, STATUS);
-  `tue_object_default_constructor(tue_sequence_item)
+) extends tue_sequence_item_base #(
+  BASE, CONFIGURATION, STATUS
+);
+`ifndef UVM_POST_VERSION_1_1
+    protected bit enable_automatic_phase_objection  = 0;
+
+    protected function void set_automatic_phase_objection(bit value);
+      enable_automatic_phase_objection  = value;
+    endfunction
+
+    task pre_body();
+      if ((starting_phase != null) && enable_automatic_phase_objection) begin
+        starting_phase.raise_objection(this);
+      end
+    endtask
+
+    task post_body();
+      if ((starting_phase != null) && enable_automatic_phase_objection) begin
+        starting_phase.drop_objection(this);
+      end
+    endtask
+`endif
+
+  `tue_object_default_constructor(tue_sequence)
 endclass
 `endif

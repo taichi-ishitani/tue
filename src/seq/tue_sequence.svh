@@ -20,36 +20,9 @@ class tue_sequence #(
   type  STATUS        = tue_status_dummy,
   type  REQ           = uvm_sequence_item,
   type  RSP           = REQ
-) extends tue_object_base #(uvm_sequence #(REQ, RSP), CONFIGURATION, STATUS);
-  function void set_sequencer(uvm_sequencer_base sequencer);
-    tue_component_proxy_base #(CONFIGURATION, STATUS) component_proxy;
-    super.set_sequencer(sequencer);
-    component_proxy = tue_component_proxy_base #(CONFIGURATION, STATUS)::get(sequencer);
-    if (component_proxy != null) begin
-      set_context(component_proxy.get_configuration(), component_proxy.get_status());
-    end
-  endfunction
-
-`ifndef UVM_POST_VERSION_1_1
-    protected bit enable_automatic_phase_objection  = 0;
-
-    protected function void set_automatic_phase_objection(bit value);
-      enable_automatic_phase_objection  = value;
-    endfunction
-
-    task pre_body();
-      if ((starting_phase != null) && enable_automatic_phase_objection) begin
-        starting_phase.raise_objection(this);
-      end
-    endtask
-
-    task post_body();
-      if ((starting_phase != null) && enable_automatic_phase_objection) begin
-        starting_phase.drop_objection(this);
-      end
-    endtask
-`endif
-
+) extends tue_sequence_base #(
+  uvm_sequence #(REQ, RSP), CONFIGURATION, STATUS
+);
   `tue_object_default_constructor(tue_sequence)
 endclass
 `endif
