@@ -35,6 +35,14 @@ virtual class tue_agent #(
     return (is_active == UVM_PASSIVE) ? 1 : 0;
   endfunction
 
+  function void apply_config_settings(bit verbose = 0);
+    super.apply_config_settings(verbose);
+    apply_agent_mode();
+  endfunction
+
+  protected virtual function void apply_agent_mode();
+  endfunction
+
   `tue_component_default_constructor(tue_agent)
 endclass
 `endif
