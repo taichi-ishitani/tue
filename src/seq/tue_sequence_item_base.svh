@@ -16,13 +16,17 @@
 `ifndef TUE_SEQUENCE_ITEM_BASE_SVH
 `define TUE_SEQUENCE_ITEM_BASE_SVH
 class tue_sequence_item_base #(
-  type  BASE          = uvm_sequence_item,
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy
+  type  BASE                = uvm_sequence_item,
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_object_base #(
   BASE, CONFIGURATION, STATUS
 );
-  typedef tue_component_proxy_base #(CONFIGURATION, STATUS)  t_component_proxy;
+  typedef tue_component_proxy_base #(
+    PROXY_CONFIGURATION, PROXY_STATUS
+  ) t_component_proxy;
 
   function void set_sequencer(uvm_sequencer_base sequencer);
     t_component_proxy component_proxy;

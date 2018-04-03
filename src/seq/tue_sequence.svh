@@ -16,12 +16,14 @@
 `ifndef TUE_SEQUENCE_SVH
 `define TUE_SEQUENCE_SVH
 class tue_sequence #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  REQ           = uvm_sequence_item,
-  type  RSP           = REQ
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  REQ                 = uvm_sequence_item,
+  type  RSP                 = REQ,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_sequence_base #(
-  uvm_sequence #(REQ, RSP), CONFIGURATION, STATUS
+  uvm_sequence #(REQ, RSP), CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
 );
   `tue_object_default_constructor(tue_sequence)
 endclass

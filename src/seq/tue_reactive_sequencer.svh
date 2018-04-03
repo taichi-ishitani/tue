@@ -19,15 +19,19 @@
 `uvm_analysis_imp_decl(_request)
 
 virtual class tue_reactive_sequencer #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  ITEM          = uvm_sequence_item,
-  type  REQUEST       = ITEM,
-  type  RSP           = ITEM
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  ITEM                = uvm_sequence_item,
+  type  REQUEST             = ITEM,
+  type  RSP                 = ITEM,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_sequencer #(
-  CONFIGURATION, STATUS, ITEM, RSP
+  CONFIGURATION, STATUS, ITEM, RSP, PROXY_CONFIGURATION, PROXY_STATUS
 );
-  typedef tue_reactive_sequencer #(CONFIGURATION, STATUS, ITEM, REQUEST, RSP) this_type;
+  typedef tue_reactive_sequencer #(
+    CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  ) this_type;
 
   uvm_analysis_imp_request #(REQUEST, this_type)  request_export;
 
@@ -43,13 +47,15 @@ virtual class tue_reactive_sequencer #(
 endclass
 
 class tue_reactive_fifo_sequencer #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  ITEM          = uvm_sequence_item,
-  type  REQUEST       = ITEM,
-  type  RSP           = ITEM
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  ITEM                = uvm_sequence_item,
+  type  REQUEST             = ITEM,
+  type  RSP                 = ITEM,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_reactive_sequencer #(
-  CONFIGURATION, STATUS, ITEM, REQUEST, RSP
+  CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
 );
   protected uvm_tlm_analysis_fifo #(REQUEST)  request_fifo;
 
@@ -67,6 +73,8 @@ class tue_reactive_fifo_sequencer #(
   endtask
 
   `tue_component_default_constructor(tue_reactive_fifo_sequencer)
-  `uvm_component_param_utils (tue_reactive_fifo_sequencer #(CONFIGURATION, STATUS, ITEM, REQUEST, RSP))
+  `uvm_component_param_utils (tue_reactive_fifo_sequencer #(
+    CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  ))
 endclass
 `endif

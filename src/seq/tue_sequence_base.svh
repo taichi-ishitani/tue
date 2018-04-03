@@ -16,11 +16,13 @@
 `ifndef TUE_SEQUENCE_BASE_SVH
 `define TUE_SEQUENCE_BASE_SVH
 class tue_sequence_base #(
-  type  BASE          = uvm_sequence,
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy
+  type  BASE                = uvm_sequence,
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_sequence_item_base #(
-  BASE, CONFIGURATION, STATUS
+  BASE, CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
 );
 `ifndef UVM_POST_VERSION_1_1
     protected bit enable_automatic_phase_objection  = 0;

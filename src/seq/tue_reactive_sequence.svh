@@ -16,13 +16,19 @@
 `ifndef TUE_REACTIVE_SEQUENCE_SVH
 `define TUE_REACTIVE_SEQUENCE_SVH
 virtual class tue_reactive_sequence #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  ITEM          = uvm_sequence_item,
-  type  REQUEST       = ITEM,
-  type  RSP           = ITEM
-) extends tue_sequence #(CONFIGURATION, STATUS, ITEM, RSP);
-  typedef tue_reactive_sequencer #(CONFIGURATION, STATUS, ITEM, REQUEST, RSP) t_sequencer;
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  ITEM                = uvm_sequence_item,
+  type  REQUEST             = ITEM,
+  type  RSP                 = ITEM,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
+) extends tue_sequence #(
+  CONFIGURATION, STATUS, ITEM, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+);
+  typedef tue_reactive_sequencer #(
+    CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  ) t_sequencer;
 
   virtual task get_request(ref REQUEST request);
     t_sequencer sequencer;

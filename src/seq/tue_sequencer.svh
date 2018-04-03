@@ -16,21 +16,29 @@
 `ifndef TUE_SEQUENCER_SVH
 `define TUE_SEQUENCER_SVH
 class tue_sequencer #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  REQ           = uvm_sequence_item,
-  type  RSP           = REQ
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  REQ                 = uvm_sequence_item,
+  type  RSP                 = REQ,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
 ) extends tue_component_base #(
   uvm_sequencer #(REQ, RSP), CONFIGURATION, STATUS
 );
-  typedef tue_sequencer #(CONFIGURATION, STATUS, REQ, RSP)        this_type;
-  typedef tue_component_proxy #(this_type, CONFIGURATION, STATUS) t_component_proxy;
+  typedef tue_sequencer #(
+    CONFIGURATION, STATUS, REQ, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  ) this_type;
+  typedef tue_component_proxy #(
+    this_type, PROXY_CONFIGURATION, PROXY_STATUS
+  ) t_component_proxy;
 
   function new(string name = "tue_sequencer", uvm_component parent = null);
     super.new(name, parent);
     void'(t_component_proxy::create_component_proxy(this));
   endfunction
 
-  `uvm_component_param_utils(tue_sequencer #(CONFIGURATION, STATUS, REQ, RSP))
+  `uvm_component_param_utils(tue_sequencer #(
+    CONFIGURATION, STATUS, REQ, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  ))
 endclass
 `endif

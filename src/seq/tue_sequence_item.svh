@@ -16,9 +16,13 @@
 `ifndef TUE_SEQUENCE_ITEM_SVH
 `define TUE_SEQUENCE_ITEM_SVH
 class tue_sequence_item #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy
-) extends tue_sequence_item_base #(uvm_sequence_item, CONFIGURATION, STATUS);
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
+) extends tue_sequence_item_base #(
+  uvm_sequence_item, CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
+);
   `tue_object_default_constructor(tue_sequence_item)
 endclass
 `endif
