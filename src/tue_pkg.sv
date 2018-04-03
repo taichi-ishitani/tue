@@ -23,6 +23,7 @@ package tue_pkg;
 
   `tue_include_file(base, tue_version.svh        )
   `tue_include_file(base, tue_globals.svh        )
+  `tue_include_file(base, tue_fifo.svh           )
   `tue_include_file(base, tue_configuration.svh  )
   `tue_include_file(base, tue_status.svh         )
   `tue_include_file(base, tue_check_type.svh     )
