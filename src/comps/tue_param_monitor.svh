@@ -40,7 +40,7 @@ virtual class tue_param_monitor #(
     item  = ITEM::type_id::create(item_name);
     item.set_context(configuration, status);
     if (is_child_item) begin
-      void'(begin_child_tr(item, stream_name, label, desc, begin_time));
+      void'(begin_child_tr(item, parent_handle, stream_name, label, desc, begin_time));
     end
     else begin
       void'(begin_tr(item, stream_name, label, desc, begin_time, parent_handle));
