@@ -37,6 +37,14 @@ class tue_sequence_item_base #(
     end
   endfunction
 
+  function bit began();
+    return begin_event.is_on();
+  endfunction
+
+  function bit ended();
+    return end_event.is_on();
+  endfunction
+
   `tue_object_default_constructor(tue_sequence_item_base)
 endclass
 `endif
