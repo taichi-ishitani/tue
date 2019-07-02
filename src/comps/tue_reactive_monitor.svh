@@ -19,8 +19,9 @@ virtual class tue_reactive_monitor #(
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy,
   type  ITEM          = uvm_sequence_item,
+  type  ITEM_HANDLE   = ITEM,
   type  REQUEST       = ITEM
-) extends tue_param_monitor #(CONFIGURATION, STATUS, ITEM);
+) extends tue_param_monitor #(CONFIGURATION, STATUS, ITEM, ITEM_HANDLE);
   uvm_analysis_port #(REQUEST)  request_port;
 
   function void build_phase(uvm_phase phase);

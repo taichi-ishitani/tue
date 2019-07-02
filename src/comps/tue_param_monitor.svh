@@ -18,16 +18,17 @@
 virtual class tue_param_monitor #(
   type  CONFIGURATION = tue_configuration_dummy,
   type  STATUS        = tue_status_dummy,
-  type  ITEM          = uvm_sequence_item
+  type  ITEM          = uvm_sequence_item,
+  type  ITEM_HANDLE   = ITEM
 ) extends tue_monitor #(CONFIGURATION, STATUS);
-  uvm_analysis_port #(ITEM) item_port;
+  uvm_analysis_port #(ITEM_HANDLE)  item_port;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     item_port = new("item_port", this);
   endfunction
 
-  virtual function ITEM create_item(
+  virtual function ITEM_HANDLE create_item(
     string  item_name     = "item",
     string  stream_name   = "main",
     string  label         = "",
@@ -49,9 +50,9 @@ virtual class tue_param_monitor #(
   endfunction
 
   virtual function void write_item(
-    ITEM  item,
-    time  end_time    = 0,
-    bit   free_handle = 1
+    ITEM_HANDLE item,
+    time        end_time    = 0,
+    bit         free_handle = 1
   );
     if (!item.end_event.is_on()) begin
       end_tr(item, end_time, free_handle);
