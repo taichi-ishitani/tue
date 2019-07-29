@@ -34,18 +34,12 @@ virtual class tue_param_monitor #(
     string  label         = "",
     string  desc          = "",
     time    begin_time    = 0,
-    int     parent_handle = 0,
-    bit     is_child_item = 0
+    int     parent_handle = 0
   );
     ITEM  item;
     item  = ITEM::type_id::create(item_name);
     item.set_context(configuration, status);
-    if (is_child_item) begin
-      void'(begin_child_tr(item, parent_handle, stream_name, label, desc, begin_time));
-    end
-    else begin
-      void'(begin_tr(item, stream_name, label, desc, begin_time, parent_handle));
-    end
+    void'(begin_tr(item, stream_name, label, desc, begin_time, parent_handle));
     return item;
   endfunction
 
@@ -54,7 +48,9 @@ virtual class tue_param_monitor #(
     time        end_time    = 0,
     bit         free_handle = 1
   );
-    if (!item.end_event.is_on()) begin
+    uvm_event_pool  event_pool  = item.get_event_pool();
+    uvm_event       end_event   = event_pool.get("end");
+    if (!end_event.is_on()) begin
       end_tr(item, end_time, free_handle);
     end
     item_port.write(item);

@@ -64,6 +64,9 @@ virtual class tue_component_base #(
 
     void'(uvm_config_db#(CONFIGURATION)::get(this, "", "configuration", configuration));
     if (configuration == null) begin
+      void'(uvm_config_db#(CONFIGURATION)::get(null, "", "configuration", configuration));
+    end
+    if (configuration == null) begin
       create_configuration();
     end
     if (configuration == null) begin
@@ -84,6 +87,9 @@ virtual class tue_component_base #(
     end
 
     void'(uvm_config_db#(STATUS)::get(this, "", "status", status));
+    if (status == null) begin
+      void'(uvm_config_db#(STATUS)::get(null, "", "status", status));
+    end
     if (status == null) begin
       create_status();
     end

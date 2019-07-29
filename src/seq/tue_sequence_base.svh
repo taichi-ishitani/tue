@@ -24,7 +24,7 @@ class tue_sequence_base #(
 ) extends tue_sequence_item_base #(
   BASE, CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
 );
-`ifndef UVM_POST_VERSION_1_1
+`ifdef TUE_UVM_PRE_1_2
     protected bit enable_automatic_phase_objection  = 0;
 
     protected function void set_automatic_phase_objection(bit value);

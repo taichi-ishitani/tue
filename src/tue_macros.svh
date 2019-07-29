@@ -27,4 +27,20 @@
 `tue_include_file(macros, tue_version_defines.svh)
 `tue_include_file(macros, tue_object_defines.svh )
 
+`ifdef UVM_VERSION_1_0
+  `define TUE_UVM_PRE_IEEE
+`elsif UVM_VERSION_1_1
+  `define TUE_UVM_PRE_IEEE
+`elsif UVM_VERSION_1_2
+  `define TUE_UVM_PRE_IEEE
+`endif
+
+`ifdef TUE_UVM_PRE_IEEE
+  `ifdef UVM_VERSION_1_0
+    `define TUE_UVM_PRE_1_2
+  `elsif UVM_VERSION_1_1
+    `define TUE_UVM_PRE_1_2
+  `endif
+`endif
+
 `endif
