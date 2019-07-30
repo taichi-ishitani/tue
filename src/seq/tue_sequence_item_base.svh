@@ -37,15 +37,18 @@ class tue_sequence_item_base #(
     end
   endfunction
 
+  function uvm_event get_event(string name);
+    uvm_event_pool  event_pool  = get_event_pool();
+    return event_pool.get(name);
+  endfunction
+
   function bit began();
-    uvm_event_pool  event_pool    = get_event_pool();
-    uvm_event       event_handle  = event_pool.get("begin");
+    uvm_event event_handle  = get_event("begin");
     return event_handle.is_on();
   endfunction
 
   function bit ended();
-    uvm_event_pool  event_pool    = get_event_pool();
-    uvm_event       event_handle  = event_pool.get("end");
+    uvm_event event_handle  = get_event("end");
     return event_handle.is_on();
   endfunction
 
