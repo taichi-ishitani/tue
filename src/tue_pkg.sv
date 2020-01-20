@@ -33,6 +33,7 @@ package tue_pkg;
   `tue_include_file(base, tue_component.svh      )
 
   `tue_include_file(comps, tue_subscriber.svh )
+  `tue_include_file(comps, tue_item_waiter.svh)
   `tue_include_file(comps, tue_monitor.svh    )
   `tue_include_file(comps, tue_driver.svh     )
   `tue_include_file(comps, tue_scoreboard.svh )
@@ -53,8 +54,5 @@ package tue_pkg;
   `tue_include_file(seq  , tue_reactive_sequence.svh )
   `tue_include_file(comps, tue_reactive_monitor.svh  )
   `tue_include_file(comps, tue_reactive_agent.svh    )
-
-  `tue_include_file(reg, tue_reg_item.svh)
-  `tue_include_file(reg, tue_reg_predictor.svh)
 endpackage
 `endif
