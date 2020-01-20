@@ -40,8 +40,13 @@ virtual class tue_reactive_sequencer #(
     request_export  = new("request_export", this);
   endfunction
 
-  pure virtual function void write_request(REQUEST request);
-  pure virtual task get_request(ref REQUEST request);
+  virtual function void write_request(REQUEST request);
+    `uvm_fatal("TUE_REACTIVE_SEQUENCER", "write_request is not implemented.")
+  endfunction
+
+  virtual task get_request(ref REQUEST request);
+    `uvm_fatal("TUE_REACTIVE_SEQUENCER", "get_request is not implemented.")
+  endtask
 
   `tue_component_default_constructor(tue_reactive_sequencer)
 endclass
