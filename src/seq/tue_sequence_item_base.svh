@@ -52,6 +52,16 @@ class tue_sequence_item_base #(
     return event_handle.is_on();
   endfunction
 
+  task wait_for_beginning(bit delta = 0);
+    uvm_event begin_event = get_event("begin");
+    begin_event.wait_on(delta);
+  endtask
+
+  task wait_for_ending(bit delta = 0);
+    uvm_event end_event = get_event("end");
+    end_event.wait_on(delta);
+  endtask
+
   `tue_object_default_constructor(tue_sequence_item_base)
 endclass
 `endif
