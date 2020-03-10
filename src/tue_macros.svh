@@ -24,8 +24,9 @@
   `define tue_include_file(directory, file_name) `include `"file_name`"
 `endif
 
-`tue_include_file(macros, tue_version_defines.svh)
-`tue_include_file(macros, tue_object_defines.svh )
+`tue_include_file(macros, tue_version_defines.svh )
+`tue_include_file(macros, tue_object_defines.svh  )
+`tue_include_file(macros, tue_sequence_defines.svh)
 
 `ifdef UVM_VERSION_1_0
   `define TUE_UVM_PRE_IEEE
