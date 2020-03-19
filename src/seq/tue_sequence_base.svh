@@ -27,7 +27,7 @@ class tue_sequence_base #(
 `ifdef TUE_UVM_PRE_1_2
     protected bit enable_automatic_phase_objection  = 0;
 
-    protected function void set_automatic_phase_objection(bit value);
+    function void set_automatic_phase_objection(bit value);
       enable_automatic_phase_objection  = value;
     endfunction
 
@@ -42,6 +42,10 @@ class tue_sequence_base #(
         starting_phase.drop_objection(this);
       end
     endtask
+`else
+  function void set_automatic_phase_objection(bit value);
+    super.set_automatic_phase_objection(value);
+  endfunction
 `endif
 
   `tue_object_default_constructor(tue_sequence)
