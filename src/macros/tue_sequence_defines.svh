@@ -16,19 +16,59 @@
 `ifndef TUE_SEQUENCE_DEFINES_SVH
 `define TUE_SEQUENCE_DEFINES_SVH
 
+`define tue_create_on(SEQ_OR_ITEM, SEQR) \
+begin \
+  uvm_object_wrapper  __wrapper; \
+  __wrapper = SEQ_OR_ITEM.get_type(); \
+  $cast(SEQ_OR_ITEM, this.create_item(__wrapper, SEQR, `"SEQ_OR_ITEM`")); \
+end
+
+`define tue_create(SEQ_OR_ITEM) \
+`tue_create_on(SEQ_OR_ITEM, m_sequencer)
+
+`define tue_do_on_with(SEQ_OR_ITEM, SEQR, CONSTRAINTS) \
+begin \
+  uvm_sequence_base __seq; \
+  `tue_create_on(SEQ_OR_ITEM, SEQR) \
+  void'($cast(__seq, SEQ_OR_ITEM)); \
+  if (__seq == null) begin \
+    this.start_item(SEQ_OR_ITEM, -1); \
+  end \
+  if ((__seq == null) || (!__seq.do_not_randomize)) begin \
+    if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
+      `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
+    end \
+  end \
+  if (__seq == null) begin \
+    this.finish_item(SEQ_OR_ITEM, -1); \
+  end \
+  else begin \
+    __seq.start(SEQR, this, -1, 0); \
+  end \
+end
+
+`define tue_do_on(SEQ_OR_ITEM, SEQR) \
+`tue_do_on_with(SEQ_OR_ITEM, SEQR, {})
+
+`define tue_do_with(SEQ_OR_ITEM, CONSTRAINTS) \
+`tue_do_on_with(SEQ_OR_ITEM, m_sequencer, CONSTRAINTS)
+
+`define tue_do(SEQ_OR_ITEM) \
+`tue_do_on_with(SEQ_OR_ITEM, m_sequencer, {})
+
 `define tue_fork_do_on_with(SEQ_OR_ITEM, SEQR, CONSTRAINTS) \
 begin \
   uvm_sequence_base __seq; \
   uvm_sequence_item __item; \
-  `uvm_create_on(SEQ_OR_ITEM, SEQR) \
-  $cast(__seq, SEQ_OR_ITEM); \
-  $cast(__item, SEQ_OR_ITEM); \
+  `tue_create_on(SEQ_OR_ITEM, SEQR) \
+  void'($cast(__seq, SEQ_OR_ITEM)); \
+  void'($cast(__item, SEQ_OR_ITEM)); \
   if (__seq == null) begin \
     start_item(SEQ_OR_ITEM, -1); \
   end \
   if ((__seq == null) || (!__seq.do_not_randomize)) begin \
     if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
-      `uvm_warning("RNDFLD", "Randomization failed in tue_do_with action") \
+      `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
     end \
   end \
   fork \
