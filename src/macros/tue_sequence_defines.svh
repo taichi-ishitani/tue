@@ -83,6 +83,7 @@ begin \
       end \
     end \
   join_none \
+  #0; \
 end
 
 `define tue_fork_do_on(SEQ_OR_ITEM, SEQR) \
