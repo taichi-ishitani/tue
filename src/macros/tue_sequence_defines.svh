@@ -83,6 +83,7 @@ begin \
       end \
     end \
   join_none \
+  #0; \
 end
 
 `define tue_fork_do_on(SEQ_OR_ITEM, SEQR) \
@@ -91,7 +92,7 @@ end
 `define tue_fork_do_with(SEQ_OR_ITEM, CONSTRAINTS) \
 `tue_fork_do_on_with(SEQ_OR_ITEM, m_sequencer, CONSTRAINTS)
 
-`define tue_fork_on(SEQ_OR_ITEM) \
+`define tue_fork_do(SEQ_OR_ITEM) \
 `tue_fork_do_on_with(SEQ_OR_ITEM, m_sequencer, {})
 
 `endif
