@@ -49,5 +49,9 @@ virtual class tue_object_base #(
   endfunction
 
   `tue_object_default_constructor(tue_object_base)
+  `uvm_field_utils_begin(tue_object_base #(BASE, CONFIGURATION, STATUS))
+    `uvm_field_object(configuration, UVM_REFERENCE | UVM_PACK)
+    `uvm_field_object(status, UVM_REFERENCE | UVM_PACK)
+  `uvm_field_utils_end
 endclass
 `endif
