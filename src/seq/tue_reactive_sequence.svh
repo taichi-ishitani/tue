@@ -26,18 +26,25 @@ virtual class tue_reactive_sequence #(
 ) extends tue_sequence #(
   CONFIGURATION, STATUS, ITEM, RSP, PROXY_CONFIGURATION, PROXY_STATUS
 );
-  typedef tue_reactive_sequencer #(
-    CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
-  ) t_sequencer;
+  protected tue_reactive_sequencer_base #(
+    .CONFIGURATION        (CONFIGURATION        ),
+    .STATUS               (STATUS               ),
+    .ITEM                 (ITEM                 ),
+    .REQUEST              (REQUEST              ),
+    .RSP                  (RSP                  ),
+    .PROXY_CONFIGURATION  (PROXY_CONFIGURATION  ),
+    .PROXY_STATUS         (PROXY_STATUS         )
+  ) reactive_sequencer;
 
-  virtual task get_request(ref REQUEST request);
-    t_sequencer sequencer;
-    if ($cast(sequencer, get_sequencer())) begin
-      sequencer.get_request(request);
-    end
-    else begin
+  virtual function void set_sequencer(uvm_sequencer_base sequencer);
+    super.set_sequencer(sequencer);
+    if (!$cast(reactive_sequencer, sequencer)) begin
       `uvm_fatal(get_name(), "Error casting reactive sequencer")
     end
+  endfunction
+
+  virtual task get_request(ref REQUEST request);
+    reactive_sequencer.get_request(request);
   endtask
 
   `tue_object_default_constructor(tue_reactive_sequence)
