@@ -56,6 +56,11 @@ package tue_pkg;
   `tue_include_file(comps, tue_reactive_monitor.svh  )
   `tue_include_file(comps, tue_reactive_agent.svh    )
 
+  `tue_include_file(reg, tue_reg_cbs.svh      )
+  `tue_include_file(reg, tue_reg_field.svh    )
+  `tue_include_file(reg, tue_reg.svh          )
+  `tue_include_file(reg, tue_reg_block.svh    )
+  `tue_include_file(reg, tue_reg_map.svh      )
   `tue_include_file(reg, tue_reg_item.svh     )
   `tue_include_file(reg, tue_reg_predictor.svh)
 endpackage

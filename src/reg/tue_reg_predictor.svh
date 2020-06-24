@@ -47,6 +47,7 @@ class tue_reg_predictor #(type BUSTYPE = int) extends uvm_reg_predictor #(BUSTYP
         $sformatf("Observed transaction does not target a register %p", tr),
         UVM_FULL
       )
+      return;
     end
 
     local_map   = rg.get_local_map(map);

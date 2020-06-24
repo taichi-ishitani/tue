@@ -24,4 +24,12 @@
 
 `define TUE_VERSION_STRING `"`TUE_NAME``-```TUE_MAJOR_REV``.```TUE_MINOR_REV```"
 
+`ifdef UVM_VERSION_1_0
+  `define TUE_UVM_PRE_IEEE
+`elsif UVM_VERSION_1_1
+  `define TUE_UVM_PRE_IEEE
+`elsif UVM_VERSION_1_2
+  `define TUE_UVM_PRE_IEEE
+`endif
+
 `endif
