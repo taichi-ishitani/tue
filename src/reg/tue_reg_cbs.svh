@@ -15,9 +15,79 @@
 //------------------------------------------------------------------------------
 `ifndef TUE_REG_CBS_SVH
 `define TUE_REG_CBS_SVH
+class tue_reg_cbs_base extends uvm_reg_cbs;
+  protected function bit m_is_reg_cb_registed(uvm_reg rg);
+    uvm_reg_cb_iter cbs;
+
+    cbs = new(rg);
+    void'(cbs.first());
+    while (cbs.get_cb() != null) begin
+      if (cbs.get_cb() == this) begin
+        return 1;
+      end
+      else begin
+        void'(cbs.next());
+      end
+    end
+
+    return 0;
+  endfunction
+
+  protected function bit m_is_field_cb_registered(uvm_reg_field field);
+    uvm_reg_field_cb_iter cbs;
+
+    cbs = new(field);
+    void'(cbs.first());
+    while (cbs.get_cb() != null) begin
+      if (cbs.get_cb() == this) begin
+        return 1;
+      end
+      else begin
+        void'(cbs.next());
+      end
+    end
+
+    return 0;
+  endfunction
+
+  protected function void m_add(uvm_reg rg);
+    if (!m_is_reg_cb_registed(rg)) begin
+      uvm_reg_cb::add(rg, this);
+    end
+
+    begin
+      uvm_reg_field fields[$];
+      rg.get_fields(fields);
+      foreach (fields[i]) begin
+        if (!m_is_field_cb_registered(fields[i])) begin
+          uvm_reg_field_cb::add(fields[i], this);
+        end
+      end
+    end
+  endfunction
+
+  protected function void m_remove(uvm_reg rg);;
+    if (m_is_reg_cb_registed(rg)) begin
+      uvm_reg_cb::delete(rg, this);
+    end
+
+    begin
+      uvm_reg_field fields[$];
+      rg.get_fields(fields);
+      foreach (fields[i]) begin
+        if (m_is_field_cb_registered(fields[i])) begin
+          uvm_reg_field_cb::delete(fields[i], this);
+        end
+      end
+    end
+  endfunction
+
+  `tue_object_default_constructor(tue_reg_cbs_base)
+endclass
+
 class tue_reg_read_only_cbs #(
   uvm_severity  SEVERITY  = UVM_ERROR
-) extends uvm_reg_cbs;
+) extends tue_reg_cbs_base;
   typedef tue_reg_read_only_cbs #(SEVERITY) this_type;
 
   virtual task pre_write(uvm_reg_item rw);
@@ -58,32 +128,13 @@ class tue_reg_read_only_cbs #(
   endfunction
 
   static function void add(uvm_reg rg);
-    uvm_reg_field fields[$];
-    uvm_reg_cb::add(rg, get());
-    rg.get_fields(fields);
-    foreach (fields[i]) begin
-      uvm_reg_field_cb::add(fields[i], get());
-    end
+    this_type cb  = get();
+    cb.m_add(rg);
   endfunction
 
   static function void remove(uvm_reg rg);
-    uvm_reg_cb_iter cbs;
-    uvm_reg_field   fields[$];
-
-    cbs = new(rg);
-    void'(cbs.first());
-    while (cbs.get_cb() != get()) begin
-      if (cbs.get_cb() == null) begin
-        return;
-      end
-      void'(cbs.next());
-    end
-    uvm_reg_cb::delete(rg, get());
-
-    rg.get_fields(fields);
-    foreach (fields[i]) begin
-      uvm_reg_field_cb::delete(fields[i], get());
-    end
+    this_type cb  = get();
+    cb.m_remove(rg);
   endfunction
 
   `tue_object_default_constructor(tue_reg_read_only_cbs)
@@ -95,7 +146,7 @@ typedef tue_reg_read_only_cbs #(UVM_ERROR)    tue_reg_read_only_error_cbs;
 
 class tue_reg_write_only_cbs #(
   uvm_severity  SEVERITY  = UVM_ERROR
-) extends uvm_reg_cbs;
+) extends tue_reg_cbs_base;
   typedef tue_reg_write_only_cbs #(SEVERITY)  this_type;
 
   virtual task pre_read(uvm_reg_item rw);
@@ -136,32 +187,13 @@ class tue_reg_write_only_cbs #(
   endfunction
 
   static function void add(uvm_reg rg);
-    uvm_reg_field fields[$];
-    uvm_reg_cb::add(rg, get());
-    rg.get_fields(fields);
-    foreach (fields[i]) begin
-      uvm_reg_field_cb::add(fields[i], get());
-    end
+    this_type cb  = get();
+    cb.m_add(rg);
   endfunction
 
   static function void remove(uvm_reg rg);
-    uvm_reg_cb_iter cbs;
-    uvm_reg_field   fields[$];
-
-    cbs = new(rg);
-    void'(cbs.first());
-    while (cbs.get_cb() != get()) begin
-      if (cbs.get_cb() == null) begin
-        return;
-      end
-      void'(cbs.next());
-    end
-    uvm_reg_cb::delete(rg, get());
-
-    rg.get_fields(fields);
-    foreach (fields[i]) begin
-      uvm_reg_field_cb::delete(fields[i], get());
-    end
+    this_type cb  = get();
+    cb.m_remove(rg);
   endfunction
 
   `tue_object_default_constructor(tue_reg_write_only_cbs)
