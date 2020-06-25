@@ -56,6 +56,11 @@ package tue_pkg;
   `tue_include_file(comps, tue_reactive_monitor.svh  )
   `tue_include_file(comps, tue_reactive_agent.svh    )
 
+  `ifdef TUE_UVM_PRE_IEEE
+    typedef uvm_path_e  uvm_door_e;
+    localparam  uvm_door_e  UVM_DEFAULT_DOOR  = UVM_DEFAULT_PATH;
+  `endif
+
   `tue_include_file(reg, tue_reg_cbs.svh      )
   `tue_include_file(reg, tue_reg_field.svh    )
   `tue_include_file(reg, tue_reg.svh          )

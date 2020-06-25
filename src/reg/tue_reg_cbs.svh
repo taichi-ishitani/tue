@@ -15,7 +15,73 @@
 //------------------------------------------------------------------------------
 `ifndef TUE_REG_CBS_SVH
 `define TUE_REG_CBS_SVH
-class tue_reg_cbs_base extends uvm_reg_cbs;
+class tue_reg_cbs extends uvm_reg_cbs;
+  virtual function void pre_predict(
+    input uvm_reg_field   field,
+    input uvm_reg_data_t  current_value,
+    inout uvm_reg_data_t  rw_value,
+    input uvm_predict_e   kind,
+    input uvm_door_e      path,
+    input uvm_reg_map     map
+  );
+  endfunction
+  `tue_object_default_constructor(tue_reg_cbs)
+endclass
+
+class tue_reg_write_only_read_only_cbs #(
+  bit           WRITE_ONLY  = 1,
+  uvm_severity  SEVERITY    = UVM_ERROR
+) extends tue_reg_cbs;
+  typedef tue_reg_write_only_read_only_cbs #(WRITE_ONLY, SEVERITY)  this_type;
+
+  task pre_write(uvm_reg_item rw);
+    if (!WRITE_ONLY) begin
+      callback_body(rw);
+    end
+  endtask
+
+  task pre_read(uvm_reg_item rw);
+    if (WRITE_ONLY) begin
+      callback_body(rw);
+    end
+  endtask
+
+  protected function void callback_body(uvm_reg_item rw);
+    string  name;
+    string  id;
+    string  message;
+
+    if (rw.status != UVM_IS_OK) begin
+      return;
+    end
+
+    if (rw.element_kind == UVM_FIELD) begin
+      uvm_reg_field field;
+      uvm_reg       rg;
+      $cast(field, rw.element);
+      rg    = field.get_parent();
+      name  = rg.get_full_name();
+    end
+    else begin
+      name  = rw.element.get_full_name();
+    end
+
+    if (WRITE_ONLY) begin
+      message = $sformatf("%s is write-only, Cannot call read() method", name);
+      id      = "UVM/REG/WRITE";
+    end
+    else begin
+      message = $sformatf("%s is read-only, Cannot call write() method", name);
+      id      = "UVM/REG/READ";
+    end
+    if (SEVERITY == UVM_WARNING) begin
+      `uvm_warning(id, message)
+    end
+    else begin
+      `uvm_error(id, message)
+    end
+  endfunction
+
   protected function bit m_is_reg_cb_registed(uvm_reg rg);
     uvm_reg_cb_iter cbs;
 
@@ -82,124 +148,31 @@ class tue_reg_cbs_base extends uvm_reg_cbs;
     end
   endfunction
 
+  static  local this_type m_me;
+
+  static local function this_type get();
+    if (m_me == null) begin
+      m_me  = new();
+    end
+    return m_me;
+  endfunction
+
+  static function void add(uvm_reg rg);
+    this_type cb  = get();
+    cb.m_add(rg);
+  endfunction
+
+  static function void remove(uvm_reg rg);
+    this_type cb  = get();
+    cb.m_remove(rg);
+  endfunction
+
   `tue_object_default_constructor(tue_reg_cbs_base)
+  `uvm_object_param_utils(tue_reg_write_only_read_only_cbs #(WRITE_ONLY, SEVERITY))
 endclass
 
-class tue_reg_read_only_cbs #(
-  uvm_severity  SEVERITY  = UVM_ERROR
-) extends tue_reg_cbs_base;
-  typedef tue_reg_read_only_cbs #(SEVERITY) this_type;
-
-  virtual task pre_write(uvm_reg_item rw);
-    string  name;
-    string  message;
-
-    if (rw.status != UVM_IS_OK) begin
-      return;
-    end
-
-    if (rw.element_kind == UVM_FIELD) begin
-      uvm_reg_field field;
-      uvm_reg       rg;
-      $cast(field, rw.element);
-      rg    = field.get_parent();
-      name  = rg.get_full_name();
-    end
-    else begin
-      name  = rw.element.get_full_name();
-    end
-
-    $sformat(message, "%s is read-only. Cannot call write() method.", name);
-    if (SEVERITY == UVM_WARNING) begin
-      `uvm_warning("UVM/REG/READONLY", message)
-    end
-    else begin
-      `uvm_error("UVM/REG/READONLY", message);
-    end
-  endtask
-
-  local static  this_type m_me;
-
-  local static function this_type get();
-    if (m_me == null) begin
-      m_me  = new;
-    end
-    return m_me;
-  endfunction
-
-  static function void add(uvm_reg rg);
-    this_type cb  = get();
-    cb.m_add(rg);
-  endfunction
-
-  static function void remove(uvm_reg rg);
-    this_type cb  = get();
-    cb.m_remove(rg);
-  endfunction
-
-  `tue_object_default_constructor(tue_reg_read_only_cbs)
-  `uvm_object_param_utils(tue_reg_read_only_cbs #(SEVERITY))
-endclass
-
-typedef tue_reg_read_only_cbs #(UVM_WARNING)  tue_reg_read_only_warning_cbs;
-typedef tue_reg_read_only_cbs #(UVM_ERROR)    tue_reg_read_only_error_cbs;
-
-class tue_reg_write_only_cbs #(
-  uvm_severity  SEVERITY  = UVM_ERROR
-) extends tue_reg_cbs_base;
-  typedef tue_reg_write_only_cbs #(SEVERITY)  this_type;
-
-  virtual task pre_read(uvm_reg_item rw);
-    string  name;
-    string  message;
-
-    if (rw.status != UVM_IS_OK) begin
-      return;
-    end
-
-    if (rw.element_kind == UVM_FIELD) begin
-      uvm_reg_field field;
-      uvm_reg       rg;
-      $cast(field, rw.element);
-      rg    = field.get_parent();
-      name  = rg.get_full_name();
-    end
-    else begin
-      name  = rw.element.get_full_name();
-    end
-
-    $sformat(message, "%s is write-only. Cannot call read() method.", name);
-    if (SEVERITY == UVM_WARNING) begin
-      `uvm_warning("UVM/REG/WRITEONLY", message)
-    end
-    else begin
-      `uvm_error("UVM/REG/WRITEONLY", message);
-    end
-  endtask
-
-  local static  this_type m_me;
-
-  local static function this_type get();
-    if (m_me == null) begin
-      m_me  = new;
-    end
-    return m_me;
-  endfunction
-
-  static function void add(uvm_reg rg);
-    this_type cb  = get();
-    cb.m_add(rg);
-  endfunction
-
-  static function void remove(uvm_reg rg);
-    this_type cb  = get();
-    cb.m_remove(rg);
-  endfunction
-
-  `tue_object_default_constructor(tue_reg_write_only_cbs)
-  `uvm_object_param_utils(tue_reg_write_only_cbs #(SEVERITY))
-endclass
-
-typedef tue_reg_write_only_cbs #(UVM_WARNING) tue_reg_write_only_warning_cbs;
-typedef tue_reg_write_only_cbs #(UVM_ERROR)   tue_reg_write_only_error_cbs;
+typedef tue_reg_write_only_read_only_cbs #(1, UVM_WARNING)  tue_reg_write_only_warning_cbs;
+typedef tue_reg_write_only_read_only_cbs #(1, UVM_ERROR)    tue_reg_write_only_error_cbs;
+typedef tue_reg_write_only_read_only_cbs #(0, UVM_WARNING)  tue_reg_read_only_warning_cbs;
+typedef tue_reg_write_only_read_only_cbs #(0, UVM_ERROR)    tue_reg_read_only_error_cbs;
 `endif

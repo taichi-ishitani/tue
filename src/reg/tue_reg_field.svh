@@ -16,6 +16,104 @@
 `ifndef TUE_REG_FIELD_SVH
 `define TUE_REG_FIELD_SVH
 class tue_reg_field extends uvm_reg_field;
+  virtual function void do_predict(
+    uvm_reg_item      rw,
+    uvm_predict_e     kind  = UVM_PREDICT_DIRECT,
+    uvm_reg_byte_en_t be    = '1
+  );
+    uvm_reg_data_t  field_mask;
+    uvm_reg_data_t  field_value;
+    uvm_reg_data_t  current_value;
+
+    if (kind == UVM_PREDICT_DIRECT) begin
+      super.do_predict(rw, kind, be);
+      return;
+    end
+
+    if (!be[0]) begin
+      return;
+    end
+
+    field_mask    = (1 << get_n_bits()) - 1;
+    field_value   = rw.value[0] & field_mask;
+    current_value = get_mirrored_value();
+
+    process_pre_predict_cbs(
+      current_value, field_value, kind, rw.path, rw.map
+    );
+
+    if (rw.path inside {UVM_FRONTDOOR, UVM_PREDICT}) begin
+      if (!m_do_predict(current_value, field_value, kind, rw.map)) begin
+        return;
+      end
+      field_value &= field_mask;
+    end
+
+    begin
+      uvm_reg_data_t  value;
+      uvm_door_e      path;
+
+      value = rw.value[0];
+      path  = rw.path;
+
+      rw.value[0] = field_value;
+      rw.path     = UVM_DEFAULT_DOOR;
+      super.do_predict(rw, kind, be);
+
+      rw.value[0] = value;
+      rw.path     = path;
+    end
+  endfunction
+
+  protected function void process_pre_predict_cbs(
+    input uvm_reg_data_t  current_value,
+    inout uvm_reg_data_t  rw_value,
+    input uvm_predict_e   kind,
+    input uvm_door_e      path,
+    input uvm_reg_map     map
+  );
+    uvm_reg_field_cb_iter cbs = new(this);
+    for (uvm_reg_cbs cb = cbs.first();cb != null;cb = cbs.next()) begin
+      tue_reg_cbs cb_temp;
+      if ($cast(cb_temp, cb)) begin
+        cb_temp.pre_predict(
+          this, current_value, rw_value, kind, path, map
+        );
+      end
+    end
+  endfunction
+
+  protected virtual function bit m_do_predict(
+    input uvm_reg_data_t  current_value,
+    ref   uvm_reg_data_t  rw_value,
+    input uvm_predict_e   kind,
+    input uvm_reg_map     map
+  );
+    if (kind == UVM_PREDICT_DIRECT) begin
+      return 0;
+    end
+    else if (kind == UVM_PREDICT_WRITE) begin
+      rw_value  = XpredictX(current_value, rw_value, map);
+      return 1;
+    end
+    else begin
+      string  access  = get_access(map);
+      case (access)
+        "RC", "WRC", "WSRC", "W1SRC", "W0SRC": begin
+          rw_value  = '0; //  clear
+          return 1;
+        end
+        "RS", "WRS", "WCRS", "W1CRS", "W0CRS": begin
+          rw_value  = (1 << get_n_bits()) - 1;  //  all 1's
+          return 1;
+        end
+        default: begin
+          return is_readable(map);
+        end
+      endcase
+    end
+  endfunction
+
 `ifdef TUE_UVM_PRE_IEEE
   virtual function string get_access(uvm_reg_map map = null);
     string  access;
