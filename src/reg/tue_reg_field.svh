@@ -65,13 +65,13 @@ class tue_reg_field extends uvm_reg_field;
 
   protected function uvm_reg_data_t get_active_bits(
     uvm_reg_byte_en_t be,
-    uvm_reg_data_t  mask
+    uvm_reg_data_t    mask
   );
     uvm_reg_data_t  bits;
     int unsigned    byte_width;
     int unsigned    bit_index;
 
-    byte_width  = ((get_lsb_pos() % 8) + get_n_bits + 7) / 8;
+    byte_width  = ((get_lsb_pos() % 8) + get_n_bits() + 7) / 8;
     bits        = '0;
     for (int i = 0;i < byte_width;++i) begin
       if (be[i]) begin
@@ -107,7 +107,7 @@ class tue_reg_field extends uvm_reg_field;
     input uvm_reg_map     map
   );
     if (kind == UVM_PREDICT_DIRECT) begin
-      return 0;
+      return 1;
     end
     else if (kind == UVM_PREDICT_WRITE) begin
       rw_value  = XpredictX(current_value, rw_value, map);
