@@ -21,32 +21,30 @@ class tue_reg_field extends uvm_reg_field;
     uvm_predict_e     kind  = UVM_PREDICT_DIRECT,
     uvm_reg_byte_en_t be    = '1
   );
-    uvm_reg_data_t  field_mask;
-    uvm_reg_data_t  field_value;
+    uvm_reg_data_t  mask;
+    uvm_reg_data_t  active_bits;
+    uvm_reg_data_t  rw_value;
     uvm_reg_data_t  current_value;
 
-    if (kind == UVM_PREDICT_DIRECT) begin
-      super.do_predict(rw, kind, be);
-      return;
-    end
-
-    if (!be[0]) begin
-      return;
-    end
-
-    field_mask    = (1 << get_n_bits()) - 1;
-    field_value   = rw.value[0] & field_mask;
     current_value = get_mirrored_value();
+    mask          = (1 << get_n_bits()) - 1;
+    active_bits   = get_active_bits(be, mask);
+    rw_value      = rw.value[0] & mask;
 
-    process_pre_predict_cbs(
-      current_value, field_value, kind, rw.path, rw.map
-    );
+    if (active_bits == '0) begin
+      return;
+    end
 
-    if (rw.path inside {UVM_FRONTDOOR, UVM_PREDICT}) begin
-      if (!m_do_predict(current_value, field_value, kind, rw.map)) begin
-        return;
+    if (kind != UVM_PREDICT_DIRECT) begin
+      process_pre_predict_cbs(
+        current_value, rw_value, kind, rw.path, rw.map
+      );
+
+      if (rw.path inside {UVM_FRONTDOOR, UVM_PREDICT}) begin
+        if (!m_do_predict(current_value, rw_value, kind, rw.map)) begin
+          return;
+        end
       end
-      field_value &= field_mask;
     end
 
     begin
@@ -56,13 +54,32 @@ class tue_reg_field extends uvm_reg_field;
       value = rw.value[0];
       path  = rw.path;
 
-      rw.value[0] = field_value;
+      rw.value[0] = ((rw_value & active_bits) | (current_value & (~active_bits))) & mask;
       rw.path     = UVM_DEFAULT_DOOR;
-      super.do_predict(rw, kind, be);
+      super.do_predict(rw, kind, -1);
 
       rw.value[0] = value;
       rw.path     = path;
     end
+  endfunction
+
+  protected function uvm_reg_data_t get_active_bits(
+    uvm_reg_byte_en_t be,
+    uvm_reg_data_t  mask
+  );
+    uvm_reg_data_t  bits;
+    int unsigned    byte_width;
+    int unsigned    bit_index;
+
+    byte_width  = ((get_lsb_pos() % 8) + get_n_bits + 7) / 8;
+    bits        = '0;
+    for (int i = 0;i < byte_width;++i) begin
+      if (be[i]) begin
+        bits[8*i+:8]  = '1;
+      end
+    end
+
+    return bits & mask;
   endfunction
 
   protected function void process_pre_predict_cbs(
