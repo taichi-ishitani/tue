@@ -36,15 +36,16 @@ class tue_reg_field extends uvm_reg_field;
     end
 
     if (kind != UVM_PREDICT_DIRECT) begin
-      process_pre_predict_cbs(
-        current_value, rw_value, kind, rw.path, rw.map
-      );
+      pre_predict(current_value, rw_value, kind, rw.path, rw.map);
+      process_pre_predict_cbs(current_value, rw_value, kind, rw.path, rw.map);
 
       if (rw.path inside {UVM_FRONTDOOR, UVM_PREDICT}) begin
         if (!m_do_predict(current_value, rw_value, kind, rw.map)) begin
           return;
         end
       end
+
+      post_predict(current_value, rw_value, kind, rw.path, rw.map);
     end
 
     begin
@@ -61,6 +62,24 @@ class tue_reg_field extends uvm_reg_field;
       rw.value[0] = value;
       rw.path     = path;
     end
+  endfunction
+
+  protected virtual function void pre_predict(
+    input uvm_reg_data_t  current_value,
+    inout uvm_reg_data_t  rw_value,
+    input uvm_predict_e   kind,
+    input uvm_door_e      path,
+    input uvm_reg_map     map
+  );
+  endfunction
+
+  protected virtual function void post_predict(
+    input uvm_reg_data_t  current_value,
+    inout uvm_reg_data_t  rw_value,
+    input uvm_predict_e   kind,
+    input uvm_door_e      path,
+    input uvm_reg_map     map
+  );
   endfunction
 
   protected function uvm_reg_data_t get_active_bits(
