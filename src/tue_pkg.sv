@@ -68,5 +68,10 @@ package tue_pkg;
   `tue_include_file(reg, tue_reg_map.svh      )
   `tue_include_file(reg, tue_reg_item.svh     )
   `tue_include_file(reg, tue_reg_predictor.svh)
+
+  `tue_include_file(reg/sequences, tue_reg_sequence_base.svh)
+  `tue_include_file(reg/sequences, tue_reg_hw_reset_seq.svh )
+  `tue_include_file(reg/sequences, tue_reg_bit_bash_seq.svh )
+  `tue_include_file(reg/sequences, tue_reg_access_seq.svh   )
 endpackage
 `endif
