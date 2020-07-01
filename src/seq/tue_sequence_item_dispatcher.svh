@@ -29,7 +29,7 @@ virtual class tue_sequence_item_dispatcher #(
     uvm_sequence_base parent_sequence = null
   );
     uvm_sequence_base   dispatcher;
-    uvm_sequencer_base  sequencer;
+    uvm_sequencer_base  sequencer[2];
     int                 sequence_id;
 
     dispatcher  = parent_sequence;
@@ -40,10 +40,12 @@ virtual class tue_sequence_item_dispatcher #(
       dispatcher  = this;
     end
 
-    sequencer   = select_sequencer(item);
-    sequence_id = item.get_sequence_id();
-    dispatcher.start_item(item, -1, sequencer);
+    sequencer[0]  = select_sequencer(item);
+    sequencer[1]  = item.get_sequencer();
+    sequence_id   = item.get_sequence_id();
+    dispatcher.start_item(item, -1, sequencer[0]);
     dispatcher.finish_item(item, -1);
+    item.set_sequencer(sequencer[1]);
     item.set_sequence_id(sequence_id);
 
     post_dispatch(item);
