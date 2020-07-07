@@ -179,7 +179,7 @@ class tue_reg_map extends uvm_reg_map;
       `uvm_error(
         "RegModel",
         $sformatf(
-          "Cannot memory register by offset: Block %s is not locked.",
+          "Cannot get memory by offset: Block %s is not locked.",
           parent.get_full_name()
         )
       )
