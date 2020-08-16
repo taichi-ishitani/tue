@@ -39,7 +39,7 @@ class tue_reg_field extends uvm_reg_field;
       pre_predict(current_value, rw_value, kind, rw.path, rw.map);
       process_pre_predict_cbs(current_value, rw_value, kind, rw.path, rw.map);
 
-      if (rw.path inside {UVM_FRONTDOOR, UVM_PREDICT}) begin
+      if (m_need_prediction(rw, kind)) begin
         if (!m_do_predict(current_value, rw_value, kind, rw.map)) begin
           return;
         end
@@ -117,6 +117,10 @@ class tue_reg_field extends uvm_reg_field;
         );
       end
     end
+  endfunction
+
+  protected virtual function bit m_need_prediction(uvm_reg_item rw, uvm_predict_e kind);
+    return rw.path inside {UVM_FRONTDOOR, UVM_PREDICT};
   endfunction
 
   protected virtual function bit m_do_predict(
