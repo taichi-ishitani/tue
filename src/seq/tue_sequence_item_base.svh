@@ -52,6 +52,11 @@ class tue_sequence_item_base #(
     return event_handle.is_on();
   endfunction
 
+  function bit finished();
+    uvm_event event_handle  = get_event("end");
+    return event_handle.is_on();
+  endfunction
+
   task wait_for_beginning(bit delta = 0);
     uvm_event begin_event = get_event("begin");
     begin_event.wait_on(delta);
