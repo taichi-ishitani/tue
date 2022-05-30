@@ -81,7 +81,7 @@ class tue_reg_single_access_seq extends tue_reg_sequence_base #(uvm_reg_single_a
     input     uvm_reg_map   map
   );
     foreach (fields[i]) begin
-      if (!fields[i].is_known_access(map)) begin
+      if (!is_known_access(fields[i], map)) begin
         `uvm_warning(
           get_type_name(),
           $sformatf(
@@ -94,6 +94,22 @@ class tue_reg_single_access_seq extends tue_reg_sequence_base #(uvm_reg_single_a
     end
     return 0;
   endfunction
+
+`ifndef XILINX_SIMULATOR
+  protected function bit is_known_access(uvm_reg_field field, uvm_reg_map map);
+    return field.is_known_access(map);
+  endfunction
+`else
+  protected function bit is_known_access(uvm_reg_field field, uvm_reg_map map);
+    tue_reg_field temp;
+    if ($cast(temp, field)) begin
+      return temp.is_known_access(map);
+    end
+    else begin
+      return field.is_known_access(map);
+    end
+  endfunction
+`endif
 
   protected virtual task verify_access(uvm_reg_map map);
     uvm_status_e    status;

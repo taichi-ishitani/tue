@@ -193,6 +193,34 @@ class tue_reg_field extends uvm_reg_field;
   endfunction
 `endif
 
+`ifdef XILINX_SIMULATOR
+  `ifndef TUE_UVM_PRE_IEEE
+  virtual function string get_access(uvm_reg_map map = null);
+    return super.get_access(map);
+  endfunction
+  `endif
+
+  virtual function bit is_known_access(uvm_reg_map map = null);
+    tue_reg_field field;
+    string        access;
+
+    if ($cast(field, this)) begin
+      access  = field.get_access(map);
+    end
+    else begin
+      access  = get_access(map);
+    end
+
+    case (access)
+      "RO", "RW", "RC", "RS", "WC", "WS", "WRC", "WRS", "WSRC",
+      "WCRS", "W1C", "W1S", "W1T", "W0C", "W0S", "W0T", "W1SRC",
+      "W1CRS", "W0SRC", "W0CRS", "WO", "WOC", "WOS", "W1", "WO1": return 1;
+    endcase
+
+    return 0;
+  endfunction
+`endif
+
   virtual function bit is_writable(uvm_reg_map map = null);
     string  access  = get_access(map);
     return !(access inside {"NOACCESS", "RO", "RC", "RS"});
