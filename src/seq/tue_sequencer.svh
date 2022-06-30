@@ -53,6 +53,22 @@ class tue_sequencer #(
     end
   endfunction
 
+  function bit has_default_sequence(string phase);
+    return uvm_config_db #(uvm_object_wrapper)::exists(this, phase, "default_sequence");
+  endfunction
+
+  function void set_default_sequence(
+    string              phase,
+    uvm_object_wrapper  default_sequence,
+    bit                 override  = 0
+  );
+    if ((!override) && has_default_sequence(phase)) begin
+      return;
+    end
+
+    uvm_config_db #(uvm_object_wrapper)::set(this, phase, "default_sequence", default_sequence);
+  endfunction
+
   `uvm_component_param_utils(tue_sequencer #(
     CONFIGURATION, STATUS, REQ, RSP, PROXY_CONFIGURATION, PROXY_STATUS
   ))
