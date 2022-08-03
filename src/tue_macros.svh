@@ -28,6 +28,7 @@
 `tue_include_file(macros, tue_object_defines.svh  )
 `tue_include_file(macros, tue_sequence_defines.svh)
 `tue_include_file(macros, tue_plusarg_defines.svh )
+`tue_include_file(macros, tue_misc_defines.svh    )
 
 `ifdef UVM_VERSION_1_0
   `define TUE_UVM_PRE_IEEE
