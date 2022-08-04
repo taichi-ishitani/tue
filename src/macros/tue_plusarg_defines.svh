@@ -23,7 +23,7 @@ begin \
   string                __values[$]; \
   __clp = uvm_cmdline_processor::get_inst(); \
   __arg = `"ARG`"; \
-  if (__clp.get_arg_matches(__arg, values)) begin \
+  if (__clp.get_arg_matches(__arg, __values)) begin \
     BLOCK; \
   end \
 end
