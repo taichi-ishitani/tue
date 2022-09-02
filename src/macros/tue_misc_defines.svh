@@ -18,4 +18,11 @@
 
 `define tue_current_time $rtoi($realtime)
 
+`define tue_randomize_with(HANDLE, CONSTRAINT) \
+begin \
+  if (!HANDLE.randomize() with CONSTRAINT) begin \
+    `uvm_fatal("RNDFLD", "Randomization failed in tue_randomize_with action") \
+  end \
+end
+
 `endif
