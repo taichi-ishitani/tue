@@ -25,4 +25,12 @@ begin \
   end \
 end
 
+`define tue_allocate_address(ADDRESS, ALLOCATOR, CONSTRAINT) \
+begin \
+  if (!ALLOCATOR.randomize() with CONSTRAINT) begin \
+    `uvm_fatal("ALLOCFLD", "Address allocation failed") \
+  end \
+  ADDRESS = ALLOCATOR.address; \
+end
+
 `endif

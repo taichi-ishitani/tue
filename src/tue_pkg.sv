@@ -73,5 +73,7 @@ package tue_pkg;
   `tue_include_file(reg/sequences, tue_reg_hw_reset_seq.svh )
   `tue_include_file(reg/sequences, tue_reg_bit_bash_seq.svh )
   `tue_include_file(reg/sequences, tue_reg_access_seq.svh   )
+
+  `tue_include_file(misc, tue_address_allocator.svh)
 endpackage
 `endif
