@@ -86,11 +86,13 @@ class tue_reg_field extends uvm_reg_field;
     uvm_reg_byte_en_t be,
     uvm_reg_data_t    mask
   );
+    int             lsb_pos;
     uvm_reg_data_t  bits;
     int unsigned    byte_width;
     int unsigned    bit_index;
 
-    byte_width  = ((get_lsb_pos() % 8) + get_n_bits() + 7) / 8;
+    lsb_pos     = get_lsb_pos() % 8;
+    byte_width  = (lsb_pos + get_n_bits() + 7) / 8;
     bits        = '0;
     for (int i = 0;i < byte_width;++i) begin
       if (be[i]) begin
@@ -98,7 +100,7 @@ class tue_reg_field extends uvm_reg_field;
       end
     end
 
-    return bits & mask;
+    return (bits >> lsb_pos) & mask;
   endfunction
 
   protected function void process_pre_predict_cbs(
