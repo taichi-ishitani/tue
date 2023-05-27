@@ -36,12 +36,13 @@ class tue_driver_dummy extends tue_driver #(.REQ(tue_sequence_item_dummy));
 endclass
 
 virtual class tue_param_agent #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  ITEM          = tue_sequence_item_dummy,
-  type  MONITOR       = tue_monitor_dummy,
-  type  SEQUENCER     = tue_sequencer_dummy,
-  type  DRIVER        = tue_driver_dummy
+  type  CONFIGURATION             = tue_configuration_dummy,
+  type  STATUS                    = tue_status_dummy,
+  type  ITEM                      = tue_sequence_item_dummy,
+  type  MONITOR                   = tue_monitor_dummy,
+  type  SEQUENCER                 = tue_sequencer_dummy,
+  type  DRIVER                    = tue_driver_dummy,
+  bit   ENABLE_PASSIVE_SEQUENCER  = 0
 ) extends tue_agent #(CONFIGURATION, STATUS);
   uvm_analysis_port #(ITEM) item_port;
   SEQUENCER                 sequencer;
@@ -80,7 +81,7 @@ virtual class tue_param_agent #(
   endfunction
 
   local function void create_seqnecer();
-    if (is_active_agent() && (!tue_check_type(SEQUENCER::get_type(), tue_sequencer_dummy::get_type()))) begin
+    if ((ENABLE_PASSIVE_SEQUENCER || is_active_agent()) && (!tue_check_type(SEQUENCER::get_type(), tue_sequencer_dummy::get_type()))) begin
       sequencer = SEQUENCER::type_id::create("sequencer", this);
       sequencer.set_context(get_configuration(), get_status());
     end

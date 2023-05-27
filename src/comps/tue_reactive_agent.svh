@@ -16,13 +16,17 @@
 `ifndef TUE_REACTIVE_AGENT_SVH
 `define TUE_REACTIVE_AGENT_SVH
 virtual class tue_reactive_agent #(
-  type  CONFIGURATION = tue_configuration_dummy,
-  type  STATUS        = tue_status_dummy,
-  type  ITEM          = tue_sequence_item_dummy,
-  type  MONITOR       = tue_monitor_dummy,
-  type  SEQUENCER     = tue_sequencer_dummy,
-  type  DRIVER        = tue_driver_dummy
-) extends tue_param_agent #(CONFIGURATION, STATUS, ITEM, MONITOR, SEQUENCER, DRIVER);
+  type  CONFIGURATION             = tue_configuration_dummy,
+  type  STATUS                    = tue_status_dummy,
+  type  ITEM                      = tue_sequence_item_dummy,
+  type  MONITOR                   = tue_monitor_dummy,
+  type  SEQUENCER                 = tue_sequencer_dummy,
+  type  DRIVER                    = tue_driver_dummy,
+  bit   ENABLE_PASSIVE_SEQUENCER  = 0
+) extends tue_param_agent #(
+  CONFIGURATION, STATUS, ITEM, MONITOR,
+  SEQUENCER, DRIVER, ENABLE_PASSIVE_SEQUENCER
+);
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     if (is_active_agent()) begin
