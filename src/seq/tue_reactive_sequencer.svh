@@ -103,7 +103,7 @@ class tue_reactive_fifo_sequencer #(
   .PROXY_CONFIGURATION  (PROXY_CONFIGURATION  ),
   .PROXY_STATUS         (PROXY_STATUS         )
 );
-  protected uvm_tlm_analysis_fifo #(REQUEST)  request_fifo;
+  protected uvm_tlm_analysis_fifo #(REQUEST_HANDLE) request_fifo;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
@@ -122,7 +122,14 @@ class tue_reactive_fifo_sequencer #(
 
   `tue_component_default_constructor(tue_reactive_fifo_sequencer)
   `uvm_component_param_utils (tue_reactive_fifo_sequencer #(
-    CONFIGURATION, STATUS, ITEM, REQUEST, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+    .CONFIGURATION        (CONFIGURATION        ),
+    .STATUS               (STATUS               ),
+    .ITEM                 (ITEM                 ),
+    .REQUEST              (REQUEST              ),
+    .REQUEST_HANDLE       (REQUEST_HANDLE       ),
+    .RSP                  (RSP                  ),
+    .PROXY_CONFIGURATION  (PROXY_CONFIGURATION  ),
+    .PROXY_STATUS         (PROXY_STATUS         )
   ))
 endclass
 `endif
