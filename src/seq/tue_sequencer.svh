@@ -15,28 +15,30 @@
 //------------------------------------------------------------------------------
 `ifndef TUE_SEQUENCER_SVH
 `define TUE_SEQUENCER_SVH
-class tue_sequencer #(
+class tue_sequencer_base #(
+  type  BASE                = uvm_sequencer,
   type  CONFIGURATION       = tue_configuration_dummy,
   type  STATUS              = tue_status_dummy,
-  type  REQ                 = uvm_sequence_item,
-  type  RSP                 = REQ,
   type  PROXY_CONFIGURATION = CONFIGURATION,
   type  PROXY_STATUS        = STATUS
 ) extends tue_component_base #(
-  uvm_sequencer #(REQ, RSP), CONFIGURATION, STATUS
+  .BASE           (BASE           ),
+  .CONFIGURATION  (CONFIGURATION  ),
+  .STATUS         (STATUS         )
 );
-  typedef tue_sequencer #(
-    CONFIGURATION, STATUS, REQ, RSP, PROXY_CONFIGURATION, PROXY_STATUS
+  typedef tue_sequencer_base #(
+    BASE, CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
   ) this_type;
+
   typedef tue_component_proxy #(
     this_type, PROXY_CONFIGURATION, PROXY_STATUS
-  ) t_component_proxy;
+  ) this_proxy;
 
   protected bit enable_default_sequence = 1;
 
   function new(string name = "tue_sequencer", uvm_component parent = null);
     super.new(name, parent);
-    void'(t_component_proxy::create_component_proxy(this));
+    void'(this_proxy::create_component_proxy(this));
   endfunction
 
   function void set_enable_default_sequence(bit value);
@@ -68,7 +70,23 @@ class tue_sequencer #(
 
     uvm_config_db #(uvm_object_wrapper)::set(this, phase, "default_sequence", default_sequence);
   endfunction
+endclass
 
+class tue_sequencer #(
+  type  CONFIGURATION       = tue_configuration_dummy,
+  type  STATUS              = tue_status_dummy,
+  type  REQ                 = uvm_sequence_item,
+  type  RSP                 = REQ,
+  type  PROXY_CONFIGURATION = CONFIGURATION,
+  type  PROXY_STATUS        = STATUS
+) extends tue_sequencer_base #(
+  .BASE                 (uvm_sequencer #(REQ, RSP)  ),
+  .CONFIGURATION        (CONFIGURATION              ),
+  .STATUS               (STATUS                     ),
+  .PROXY_CONFIGURATION  (PROXY_CONFIGURATION        ),
+  .PROXY_STATUS         (PROXY_STATUS               )
+);
+  `tue_component_default_constructor(tue_sequencer)
   `uvm_component_param_utils(tue_sequencer #(
     CONFIGURATION, STATUS, REQ, RSP, PROXY_CONFIGURATION, PROXY_STATUS
   ))
