@@ -16,6 +16,9 @@
 `ifndef TUE_SEQUENCE_DEFINES_SVH
 `define TUE_SEQUENCE_DEFINES_SVH
 
+`define tue_get_randomize_enabled(SEQ) \
+`ifdef TUE_UVM_PRE_IEEE (!SEQ.do_not_randomize) `else (SEQ.get_randomize_enabled()) `endif
+
 `define tue_create_on(SEQ_OR_ITEM, SEQR) \
 begin \
   uvm_object_wrapper  __wrapper; \
@@ -34,7 +37,7 @@ begin \
   if (__seq == null) begin \
     this.start_item(SEQ_OR_ITEM, -1); \
   end \
-  if ((__seq == null) || (!__seq.do_not_randomize)) begin \
+  if ((__seq == null) || `tue_get_randomize_enabled(__seq)) begin \
     if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
       `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
     end \
@@ -66,7 +69,7 @@ begin \
   if (__seq == null) begin \
     start_item(SEQ_OR_ITEM, -1); \
   end \
-  if ((__seq == null) || (!__seq.do_not_randomize)) begin \
+  if ((__seq == null) || `tue_get_randomize_enabled(__seq)) begin \
     if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
       `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
     end \

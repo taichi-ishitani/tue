@@ -25,26 +25,36 @@ class tue_sequence_base #(
   BASE, CONFIGURATION, STATUS, PROXY_CONFIGURATION, PROXY_STATUS
 );
 `ifdef TUE_UVM_PRE_1_2
-    protected bit enable_automatic_phase_objection  = 0;
+  protected bit enable_automatic_phase_objection  = 0;
 
-    function void set_automatic_phase_objection(bit value);
-      enable_automatic_phase_objection  = value;
-    endfunction
+  function void set_automatic_phase_objection(bit value);
+    enable_automatic_phase_objection  = value;
+  endfunction
 
-    task pre_body();
-      if ((starting_phase != null) && enable_automatic_phase_objection) begin
-        starting_phase.raise_objection(this);
-      end
-    endtask
+  task pre_body();
+    if ((starting_phase != null) && enable_automatic_phase_objection) begin
+      starting_phase.raise_objection(this);
+    end
+  endtask
 
-    task post_body();
-      if ((starting_phase != null) && enable_automatic_phase_objection) begin
-        starting_phase.drop_objection(this);
-      end
-    endtask
+  task post_body();
+    if ((starting_phase != null) && enable_automatic_phase_objection) begin
+      starting_phase.drop_objection(this);
+    end
+  endtask
 `else
   function void set_automatic_phase_objection(bit value);
     super.set_automatic_phase_objection(value);
+  endfunction
+`endif
+
+`ifdef TUE_UVM_PRE_IEEE
+  virtual function bit get_randomize_enabled();
+    return !do_not_randomize;
+  endfunction
+
+  virtual function void set_randomize_enabled(bit enable);
+    do_not_randomize = !enable;
   endfunction
 `endif
 
