@@ -59,6 +59,16 @@ class tue_reg_single_access_seq extends tue_reg_sequence_base #(uvm_reg_single_a
         )
         continue;
       end
+      if (!is_reg_readable(rg, maps[i])) begin
+        `uvm_warning(
+          get_type_name(),
+          $sformatf(
+            "Register '%s' is write-only in map '%s', skipping",
+            rg.get_full_name(), maps[i].get_full_name()
+          )
+        )
+        continue;
+      end
 
       verify_access(maps[i]);
     end
