@@ -19,7 +19,7 @@ class tue_reg_field extends uvm_reg_field;
   virtual function void do_predict(
     uvm_reg_item      rw,
     uvm_predict_e     kind  = UVM_PREDICT_DIRECT,
-    uvm_reg_byte_en_t be    = '1
+    uvm_reg_byte_en_t be    = -1
   );
     uvm_reg_data_t  mask;
     uvm_reg_data_t  active_bits;
