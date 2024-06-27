@@ -15,35 +15,52 @@
 //------------------------------------------------------------------------------
 `ifndef TUE_ITEM_WAITER_SVH
 `define TUE_ITEM_WAITER_SVH
+class tue_item_param_key_waiter #(
+  type  KEY = int
+);
+  KEY       key;
+  uvm_event waiter;
+
+  function new(KEY key);
+    this.key    = key;
+    this.waiter = new();
+  endfunction
+endclass
+
 virtual class tue_item_waiter #(
   type  CONFIGURATION = uvm_object,
   type  STATUS        = uvm_object,
   type  ITEM          = uvm_sequence_item,
-  type  ID            = int
+  type  KEY           = int
 ) extends tue_subscriber #(
   .CONFIGURATION  (CONFIGURATION  ),
   .STATUS         (STATUS         ),
   .T              (ITEM           )
 );
+  typedef tue_item_param_key_waiter #(
+    .KEY  (KEY)
+  ) tue_item_key_waiter;
+
   local uvm_event waiters[$];
-  local uvm_event id_waiters[ID][$];
+  local bit       key_waiters[tue_item_key_waiter];
 
   function void write(ITEM t);
-    ID  id  = get_id(t);
+    tue_item_key_waiter triggered_waiters[$];
 
     foreach (waiters[i]) begin
       waiters[i].trigger(t);
     end
     waiters.delete();
 
-    if (!id_waiters.exists(id)) begin
-      return;
+    foreach (key_waiters[waiter]) begin
+      if (match_key(waiter.key, t)) begin
+        triggered_waiters.push_back(waiter);
+        waiter.waiter.trigger(t);
+      end
     end
-
-    foreach (id_waiters[id][i]) begin
-      id_waiters[id][i].trigger(t);
+    foreach (triggered_waiters[i]) begin
+      key_waiters.delete(triggered_waiters[i]);
     end
-    id_waiters.delete(id);
   endfunction
 
   virtual task get_item(ref ITEM item);
@@ -52,14 +69,15 @@ virtual class tue_item_waiter #(
     $cast(item, waiter.get_trigger_data());
   endtask
 
-  virtual task get_item_by_id(input ID id, ref ITEM item);
-    uvm_event waiter  = get_id_waiter(id);
+  virtual task get_item_by_key(input KEY key, ref ITEM item);
+    uvm_event waiter  = get_key_waiter(key);
     waiter.wait_on();
     $cast(item, waiter.get_trigger_data());
   endtask
 
-  protected virtual function ID get_id(ITEM item);
-    `uvm_fatal("TUE_ITEM_WAITER", "get_id is not implemented")
+  protected virtual function bit match_key(KEY key, ITEM item);
+    `uvm_fatal("TUE_ITEM_WAITER", "match_key is not implemented")
+    return 0;
   endfunction
 
   local function uvm_event get_waiter();
@@ -68,10 +86,10 @@ virtual class tue_item_waiter #(
     return waiter;
   endfunction
 
-  local function uvm_event get_id_waiter(ID id);
-    uvm_event waiter  = new();
-    id_waiters[id].push_back(waiter);
-    return waiter;
+  local function uvm_event get_key_waiter(KEY key);
+    tue_item_key_waiter waiter  = new(key);
+    key_waiters[waiter] = 1;
+    return waiter.waiter;
   endfunction
 
   `tue_component_default_constructor(tue_item_waiter)
