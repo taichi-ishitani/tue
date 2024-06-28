@@ -94,4 +94,26 @@ end
 `define tue_fork_do(SEQ_OR_ITEM) \
 `tue_fork_do_on_with(SEQ_OR_ITEM, m_sequencer, {})
 
+`define tue_rand_send_on_with(SEQ_OR_ITEM, SEQR, CONSTRAINTS) \
+begin \
+  uvm_sequence_base __seq; \
+  SEQ_OR_ITEM.set_item_context(this, SEQR); \
+  void'($cast(__seq, SEQ_OR_ITEM)); \
+  if ((__seq == null) || `tue_get_randomize_enabled(__seq)) begin \
+    if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
+      `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
+    end \
+  end \
+  if (__seq == null) begin \
+    this.start_item(SEQ_OR_ITEM, -1); \
+    this.finish_item(SEQ_OR_ITEM, -1); \
+  end \
+  else begin \
+    __seq.start(SEQR, this, -1, 0); \
+  end \
+end
+
+`define tue_rand_send_on(SEQ_OR_ITEM, SEQR) \
+`tue_rand_send_on_with(SEQ_OR_ITEM, SEQR, {})
+
 `endif
