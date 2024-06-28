@@ -34,15 +34,13 @@ begin \
   uvm_sequence_base __seq; \
   `tue_create_on(SEQ_OR_ITEM, SEQR) \
   void'($cast(__seq, SEQ_OR_ITEM)); \
-  if (__seq == null) begin \
-    this.start_item(SEQ_OR_ITEM, -1); \
-  end \
   if ((__seq == null) || `tue_get_randomize_enabled(__seq)) begin \
     if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
       `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
     end \
   end \
   if (__seq == null) begin \
+    this.start_item(SEQ_OR_ITEM, -1); \
     this.finish_item(SEQ_OR_ITEM, -1); \
   end \
   else begin \
@@ -66,9 +64,6 @@ begin \
   `tue_create_on(SEQ_OR_ITEM, SEQR) \
   void'($cast(__seq, SEQ_OR_ITEM)); \
   void'($cast(__item, SEQ_OR_ITEM)); \
-  if (__seq == null) begin \
-    start_item(SEQ_OR_ITEM, -1); \
-  end \
   if ((__seq == null) || `tue_get_randomize_enabled(__seq)) begin \
     if (!SEQ_OR_ITEM.randomize() with CONSTRAINTS) begin \
       `uvm_fatal("RNDFLD", "Randomization failed in tue_do_with action") \
@@ -82,7 +77,8 @@ begin \
         __seq_temp.start(__seq_temp.get_sequencer(), this, -1, 0); \
       end \
       else begin \
-        finish_item(__item_temp, -1); \
+        this.start_item(__item_temp, -1); \
+        this.finish_item(__item_temp, -1); \
       end \
     end \
   join_none \
