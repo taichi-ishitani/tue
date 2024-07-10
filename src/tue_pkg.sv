@@ -75,5 +75,6 @@ package tue_pkg;
   `tue_include_file(reg/sequences, tue_reg_access_seq.svh   )
 
   `tue_include_file(misc, tue_address_allocator.svh)
+  `tue_include_file(misc, tue_id_manager.svh       )
 endpackage
 `endif
